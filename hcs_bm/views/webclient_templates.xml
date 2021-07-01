@@ -1,0 +1,44 @@
+<odoo>
+  <data>
+    <template id="web_login_layout_inherited_hcs_bm" inherit_id="web.login_layout">
+      <xpath expr="//div[@class='text-center small mt-4 pt-3 border-top']" position="replace">
+        <!-- Nada -->
+      </xpath>
+    </template>
+    <template id="login_layout_inherited_hcs_bm" inherit_id="web.login">
+      <xpath expr="*" position="after">
+        <link rel="stylesheet" href="/hcs_bm/static/src/css/style.css" />
+        <style>
+          .test-ribbon{
+            width: 300px;
+            top: 25px;
+            right: -100px;
+            text-align: center;
+            padding: 10px;
+            line-height: 20px;
+            letter-spacing: 1px;
+            color: #f0f0f0;
+            -webkit-transform: rotate(45deg);
+            -ms-transform: rotate(45deg);
+            -moz-transform: rotate(45deg);
+            -o-transform: rotate(45deg);
+            transform: rotate(45deg);
+            z-index: 9999;
+            position: fixed;
+            box-shadow: 0 0 3px rgba(0,0,0,.3);
+            background: rgba(255,0,0,.6);
+            pointer-events: none;
+        }        
+        </style>
+        <div class="test-ribbon">DESARROLLO</div>
+      </xpath>
+      <xpath expr="//div[contains(@t-attf-class, 'clearfix')]" position="replace">
+        <button type="submit" class="btn btn-primary btn-block">Log in</button>
+        <t t-if="debug">
+          <button type="submit" name="redirect" value="/web/become" class="btn btn-link btn-sm btn-block">Log in as superuser</button>
+        </t>
+        <div class="o_login_auth" />
+      </xpath>
+    </template>
+  </data>
+</odoo>

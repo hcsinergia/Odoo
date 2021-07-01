@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_hcs_sudameris_employee_products,access.hcs_sudameris.sudameris_employee_products,hcs_sudameris.model_sudameris_employee_products,,1,1,1,1
+access_hcs_sudameris_employee_salary_movement,access.hcs_sudameris.sudameris_employee_salary_movement,hcs_sudameris.model_sudameris_employee_salary_movement,,1,1,1,1
+access_hcs_sudameris_res_country_neighborhood,access.hcs_sudameris.res_country_neighborhood,hcs_sudameris.model_res_country_neighborhood,,1,1,1,1
+access_hcs_sudameris_res_country_departament,access.hcs_sudameris.res_country_departament,hcs_sudameris.model_res_country_departament,,1,1,1,1

@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!--Info: https://es.wikipedia.org/wiki/Asunci%C3%B3n#Barrios -->
+        <!-- Añado Asunción a Paraguay -->
+        <record id="bm_res_country_state_1" model="res.country.state">
+            <field name="name">Asunsión</field>
+            <field name="code">1</field>
+            <field name="country_id">185</field>
+        </record>
+        <!-- Añado el departamento -->
+        <record id="bm_res_country_dep_1" model="res.country.departament">
+            <field name="name">San Roque</field>
+            <field name="code">1</field>
+            <field name="state_id" ref="bm_res_country_state_1" />
+        </record>
+        <!-- Añado los barrios del departamento anterior -->
+        <record id="bm_res_country_dep_1_nei_1" model="res.country.neighborhood">
+            <field name="name">Banco San Miguel</field>
+            <field name="code">1</field>
+            <field name="departament_id" ref="bm_res_country_dep_1" />
+        </record>
+        <record id="bm_res_country_dep_1_nei_2" model="res.country.neighborhood">
+            <field name="name">Ciudad Nueva</field>
+            <field name="code">2</field>
+            <field name="departament_id" ref="bm_res_country_dep_1" />
+        </record>
+        <record id="bm_res_country_dep_1_nei_3" model="res.country.neighborhood">
+            <field name="name">Gral. Caballero</field>
+            <field name="code">3</field>
+            <field name="departament_id" ref="bm_res_country_dep_1" />
+        </record>
+        <record id="bm_res_country_dep_1_nei_4" model="res.country.neighborhood">
+            <field name="name">Jara</field>
+            <field name="code">4</field>
+            <field name="departament_id" ref="bm_res_country_dep_1" />
+        </record>
+        <record id="bm_res_country_dep_1_nei_5" model="res.country.neighborhood">
+            <field name="name">Mcal. López</field>
+            <field name="code">5</field>
+            <field name="departament_id" ref="bm_res_country_dep_1" />
+        </record>
+        <record id="bm_res_country_dep_1_nei_6" model="res.country.neighborhood">
+            <field name="name">Mburicaó</field>
+            <field name="code">6</field>
+            <field name="departament_id" ref="bm_res_country_dep_1" />
+        </record>
+        <record id="bm_res_country_dep_1_nei_7" model="res.country.neighborhood">
+            <field name="name">Las Mercedes</field>
+            <field name="code">7</field>
+            <field name="departament_id" ref="bm_res_country_dep_1" />
+        </record>
+        <record id="bm_res_country_dep_1_nei_8" model="res.country.neighborhood">
+            <field name="name">Pinozá</field>
+            <field name="code">8</field>
+            <field name="departament_id" ref="bm_res_country_dep_1" />
+        </record>
+        <record id="bm_res_country_dep_1_nei_9" model="res.country.neighborhood">
+            <field name="name">Ricardo Brugada</field>
+            <field name="code">9</field>
+            <field name="departament_id" ref="bm_res_country_dep_1" />
+        </record>
+        <record id="bm_res_country_dep_1_nei_10" model="res.country.neighborhood">
+            <field name="name">San Juan</field>
+            <field name="code">10</field>
+            <field name="departament_id" ref="bm_res_country_dep_1" />
+        </record>
+        <record id="bm_res_country_dep_1_nei_11" model="res.country.neighborhood">
+            <field name="name">San Roque</field>
+            <field name="code">11</field>
+            <field name="departament_id" ref="bm_res_country_dep_1" />
+        </record>
+        <record id="bm_res_country_dep_1_nei_12" model="res.country.neighborhood">
+            <field name="name">San Vicente</field>
+            <field name="code">12</field>
+            <field name="departament_id" ref="bm_res_country_dep_1" />
+        </record>
+        <record id="bm_res_country_dep_1_nei_13" model="res.country.neighborhood">
+            <field name="name">Silvio Pettirossi</field>
+            <field name="code">13</field>
+            <field name="departament_id" ref="bm_res_country_dep_1" />
+        </record>
+        <record id="bm_res_country_dep_1_nei_14" model="res.country.neighborhood">
+            <field name="name">V. del Huerto</field>
+            <field name="code">14</field>
+            <field name="departament_id" ref="bm_res_country_dep_1" />
+        </record>
+        <record id="bm_res_country_dep_1_nei_15" model="res.country.neighborhood">
+            <field name="name">Vista Alegre</field>
+            <field name="code">15</field>
+            <field name="departament_id" ref="bm_res_country_dep_1" />
+        </record>
+
+        <!-- Añado el departamento -->
+        <record id="bm_res_country_dep_2" model="res.country.departament">
+            <field name="name">Trinidad</field>
+            <field name="code">2</field>
+            <field name="state_id" ref="bm_res_country_state_1" />
+        </record>
+        <!-- Añado los barrios del departamento anterior -->
+        <record id="bm_res_country_dep_2_nei_1" model="res.country.neighborhood">
+            <field name="name">Bañado Cará Cará</field>
+            <field name="code">16</field>
+            <field name="departament_id" ref="bm_res_country_dep_2" />
+        </record>
+        <record id="bm_res_country_dep_2_nei_2" model="res.country.neighborhood">
+            <field name="name">Bella Vista</field>
+            <field name="code">17</field>
+            <field name="departament_id" ref="bm_res_country_dep_2" />
+        </record>
+        <record id="bm_res_country_dep_2_nei_3" model="res.country.neighborhood">
+            <field name="name">Botánico</field>
+            <field name="code">18</field>
+            <field name="departament_id" ref="bm_res_country_dep_2" />
+        </record>
+        <record id="bm_res_country_dep_2_nei_4" model="res.country.neighborhood">
+            <field name="name">Cañada del Ybyray</field>
+            <field name="code">19</field>
+            <field name="departament_id" ref="bm_res_country_dep_2" />
+        </record>
+        <record id="bm_res_country_dep_2_nei_5" model="res.country.neighborhood">
+            <field name="name">Carmelitas</field>
+            <field name="code">20</field>
+            <field name="departament_id" ref="bm_res_country_dep_2" />
+        </record>
+        <record id="bm_res_country_dep_2_nei_6" model="res.country.neighborhood">
+            <field name="name">Loma Pytá</field>
+            <field name="code">21</field>
+            <field name="departament_id" ref="bm_res_country_dep_2" />
+        </record>
+        <record id="bm_res_country_dep_2_nei_7" model="res.country.neighborhood">
+            <field name="name">Madame Lynch</field>
+            <field name="code">22</field>
+            <field name="departament_id" ref="bm_res_country_dep_2" />
+        </record>
+        <record id="bm_res_country_dep_2_nei_8" model="res.country.neighborhood">
+            <field name="name">Manorá</field>
+            <field name="code">23</field>
+            <field name="departament_id" ref="bm_res_country_dep_2" />
+        </record>
+        <record id="bm_res_country_dep_2_nei_9" model="res.country.neighborhood">
+            <field name="name">Mbocayaty</field>
+            <field name="code">24</field>
+            <field name="departament_id" ref="bm_res_country_dep_2" />
+        </record>
+        <record id="bm_res_country_dep_2_nei_10" model="res.country.neighborhood">
+            <field name="name">Mburucuyá</field>
+            <field name="code">25</field>
+            <field name="departament_id" ref="bm_res_country_dep_2" />
+        </record>
+        <record id="bm_res_country_dep_2_nei_11" model="res.country.neighborhood">
+            <field name="name">Ñu Guazú</field>
+            <field name="code">26</field>
+            <field name="departament_id" ref="bm_res_country_dep_2" />
+        </record>
+        <record id="bm_res_country_dep_2_nei_12" model="res.country.neighborhood">
+            <field name="name">Salvador del Mundo</field>
+            <field name="code">27</field>
+            <field name="departament_id" ref="bm_res_country_dep_2" />
+        </record>
+        <record id="bm_res_country_dep_2_nei_13" model="res.country.neighborhood">
+            <field name="name">San Blas</field>
+            <field name="code">28</field>
+            <field name="departament_id" ref="bm_res_country_dep_2" />
+        </record>
+        <record id="bm_res_country_dep_2_nei_14" model="res.country.neighborhood">
+            <field name="name">Santa Rosa</field>
+            <field name="code">29</field>
+            <field name="departament_id" ref="bm_res_country_dep_2" />
+        </record>
+        <record id="bm_res_country_dep_2_nei_15" model="res.country.neighborhood">
+            <field name="name">Trinidad</field>
+            <field name="code">30</field>
+            <field name="departament_id" ref="bm_res_country_dep_2" />
+        </record>
+        <record id="bm_res_country_dep_2_nei_16" model="res.country.neighborhood">
+            <field name="name">Santo Domingo</field>
+            <field name="code">31</field>
+            <field name="departament_id" ref="bm_res_country_dep_2" />
+        </record>
+        <record id="bm_res_country_dep_2_nei_17" model="res.country.neighborhood">
+            <field name="name">Tablada Nueva</field>
+            <field name="code">32</field>
+            <field name="departament_id" ref="bm_res_country_dep_2" />
+        </record>
+        <record id="bm_res_country_dep_2_nei_18" model="res.country.neighborhood">
+            <field name="name">V. de Fátima</field>
+            <field name="code">33</field>
+            <field name="departament_id" ref="bm_res_country_dep_2" />
+        </record>
+        <record id="bm_res_country_dep_2_nei_19" model="res.country.neighborhood">
+            <field name="name">V. de la Asunción</field>
+            <field name="code">34</field>
+            <field name="departament_id" ref="bm_res_country_dep_2" />
+        </record>
+        <record id="bm_res_country_dep_2_nei_20" model="res.country.neighborhood">
+            <field name="name">Zeballos Cué</field>
+            <field name="code">35</field>
+            <field name="departament_id" ref="bm_res_country_dep_2" />
+        </record>
+
+        <!-- Añado el departamento -->
+        <record id="bm_res_country_dep_3" model="res.country.departament">
+            <field name="name">La Catedral</field>
+            <field name="code">3</field>
+            <field name="state_id" ref="bm_res_country_state_1" />
+        </record>
+        <!-- Añado los barrios del departamento anterior -->
+        <record id="bm_res_country_dep_3_nei_1" model="res.country.neighborhood">
+            <field name="name">Catedral</field>
+            <field name="code">36</field>
+            <field name="departament_id" ref="bm_res_country_dep_3" />
+        </record>
+        <record id="bm_res_country_dep_3_nei_2" model="res.country.neighborhood">
+            <field name="name">Gral. Díaz</field>
+            <field name="code">37</field>
+            <field name="departament_id" ref="bm_res_country_dep_3" />
+        </record>
+        <record id="bm_res_country_dep_3_nei_3" model="res.country.neighborhood">
+            <field name="name">Obrero</field>
+            <field name="code">38</field>
+            <field name="departament_id" ref="bm_res_country_dep_3" />
+        </record>
+        <record id="bm_res_country_dep_3_nei_4" model="res.country.neighborhood">
+            <field name="name">Roberto L. Pettit</field>
+            <field name="code">39</field>
+            <field name="departament_id" ref="bm_res_country_dep_3" />
+        </record>
+        <record id="bm_res_country_dep_3_nei_5" model="res.country.neighborhood">
+            <field name="name">San Cayetano</field>
+            <field name="code">40</field>
+            <field name="departament_id" ref="bm_res_country_dep_3" />
+        </record>
+        <record id="bm_res_country_dep_3_nei_7" model="res.country.neighborhood">
+            <field name="name">Santa Ana</field>
+            <field name="code">41</field>
+            <field name="departament_id" ref="bm_res_country_dep_3" />
+        </record>
+
+        <!-- Añado el departamento -->
+        <record id="bm_res_country_dep_4" model="res.country.departament">
+            <field name="name">La Encarnación</field>
+            <field name="code">4</field>
+            <field name="state_id" ref="bm_res_country_state_1" />
+        </record>
+        <!-- Añado los barrios del departamento anterior -->
+        <record id="bm_res_country_dep_4_nei_1" model="res.country.neighborhood">
+            <field name="name">Carlos A. López</field>
+            <field name="code">42</field>
+            <field name="departament_id" ref="bm_res_country_dep_4" />
+        </record>
+        <record id="bm_res_country_dep_4_nei_2" model="res.country.neighborhood">
+            <field name="name">Dr. Francia</field>
+            <field name="code">43</field>
+            <field name="departament_id" ref="bm_res_country_dep_4" />
+        </record>
+        <record id="bm_res_country_dep_4_nei_3" model="res.country.neighborhood">
+            <field name="name">La Encarnación</field>
+            <field name="code">44</field>
+            <field name="departament_id" ref="bm_res_country_dep_4" />
+        </record>
+        <record id="bm_res_country_dep_4_nei_4" model="res.country.neighborhood">
+            <field name="name">Itá Pytã Punta</field>
+            <field name="code">45</field>
+            <field name="departament_id" ref="bm_res_country_dep_4" />
+        </record>
+        <record id="bm_res_country_dep_4_nei_5" model="res.country.neighborhood">
+            <field name="name">Sajonia</field>
+            <field name="code">46</field>
+            <field name="departament_id" ref="bm_res_country_dep_4" />
+        </record>
+        <record id="bm_res_country_dep_4_nei_6" model="res.country.neighborhood">
+            <field name="name">San Antonio</field>
+            <field name="code">47</field>
+            <field name="departament_id" ref="bm_res_country_dep_4" />
+        </record>
+        <record id="bm_res_country_dep_4_nei_7" model="res.country.neighborhood">
+            <field name="name">Tacumbú</field>
+            <field name="code">48</field>
+            <field name="departament_id" ref="bm_res_country_dep_4" />
+        </record>
+
+        <!-- Añado el departamento -->
+        <record id="bm_res_country_dep_5" model="res.country.departament">
+            <field name="name">La Recoleta</field>
+            <field name="code">5</field>
+            <field name="state_id" ref="bm_res_country_state_1" />
+        </record>
+        <!-- Añado los barrios del departamento anterior -->
+        <record id="bm_res_country_dep_5_nei_1" model="res.country.neighborhood">
+            <field name="name">Herrera</field>
+            <field name="code">49</field>
+            <field name="departament_id" ref="bm_res_country_dep_5" />
+        </record>
+        <record id="bm_res_country_dep_5_nei_2" model="res.country.neighborhood">
+            <field name="name">Hipódromo</field>
+            <field name="code">50</field>
+            <field name="departament_id" ref="bm_res_country_dep_5" />
+        </record>
+        <record id="bm_res_country_dep_5_nei_3" model="res.country.neighborhood">
+            <field name="name">Los Laureles</field>
+            <field name="code">51</field>
+            <field name="departament_id" ref="bm_res_country_dep_5" />
+        </record>
+        <record id="bm_res_country_dep_5_nei_4" model="res.country.neighborhood">
+            <field name="name">Mcal. Estigarribia</field>
+            <field name="code">52</field>
+            <field name="departament_id" ref="bm_res_country_dep_5" />
+        </record>
+        <record id="bm_res_country_dep_5_nei_5" model="res.country.neighborhood">
+            <field name="name">Nazareth</field>
+            <field name="code">53</field>
+            <field name="departament_id" ref="bm_res_country_dep_5" />
+        </record>
+        <record id="bm_res_country_dep_5_nei_6" model="res.country.neighborhood">
+            <field name="name">Recoleta</field>
+            <field name="code">54</field>
+            <field name="departament_id" ref="bm_res_country_dep_5" />
+        </record>
+        <record id="bm_res_country_dep_5_nei_7" model="res.country.neighborhood">
+            <field name="name">San Cristóbal</field>
+            <field name="code">55</field>
+            <field name="departament_id" ref="bm_res_country_dep_5" />
+        </record>
+        <record id="bm_res_country_dep_5_nei_8" model="res.country.neighborhood">
+            <field name="name">San Jorge</field>
+            <field name="code">56</field>
+            <field name="departament_id" ref="bm_res_country_dep_5" />
+        </record>
+        <record id="bm_res_country_dep_5_nei_9" model="res.country.neighborhood">
+            <field name="name">San Pablo</field>
+            <field name="code">57</field>
+            <field name="departament_id" ref="bm_res_country_dep_5" />
+        </record>
+        <record id="bm_res_country_dep_5_nei_10" model="res.country.neighborhood">
+            <field name="name">Santa María</field>
+            <field name="code">58</field>
+            <field name="departament_id" ref="bm_res_country_dep_5" />
+        </record>
+        <record id="bm_res_country_dep_5_nei_11" model="res.country.neighborhood">
+            <field name="name">Tembetary</field>
+            <field name="code">59</field>
+            <field name="departament_id" ref="bm_res_country_dep_5" />
+        </record>
+        <record id="bm_res_country_dep_5_nei_12" model="res.country.neighborhood">
+            <field name="name">Terminal</field>
+            <field name="code">60</field>
+            <field name="departament_id" ref="bm_res_country_dep_5" />
+        </record>
+        <record id="bm_res_country_dep_5_nei_13" model="res.country.neighborhood">
+            <field name="name">Villa Aurelia</field>
+            <field name="code">61</field>
+            <field name="departament_id" ref="bm_res_country_dep_5" />
+        </record>
+        <record id="bm_res_country_dep_5_nei_14" model="res.country.neighborhood">
+            <field name="name">Villa Morra</field>
+            <field name="code">62</field>
+            <field name="departament_id" ref="bm_res_country_dep_5" />
+        </record>
+        <record id="bm_res_country_dep_5_nei_15" model="res.country.neighborhood">
+            <field name="name">Ycuá Satí</field>
+            <field name="code">63</field>
+            <field name="departament_id" ref="bm_res_country_dep_5" />
+        </record>
+        <record id="bm_res_country_dep_5_nei_16" model="res.country.neighborhood">
+            <field name="name">Ytay</field>
+            <field name="code">64</field>
+            <field name="departament_id" ref="bm_res_country_dep_5" />
+        </record>
+
+        <!-- Añado el departamento -->
+        <record id="bm_res_country_dep_6" model="res.country.departament">
+            <field name="name">Santa María</field>
+            <field name="code">6</field>
+            <field name="state_id" ref="bm_res_country_state_1" />
+        </record>
+        <!-- Añado los barrios del departamento anterior -->
+        <record id="bm_res_country_dep_6_nei_1" model="res.country.neighborhood">
+            <field name="name">Itá Enramada</field>
+            <field name="code">65</field>
+            <field name="departament_id" ref="bm_res_country_dep_6" />
+        </record>
+        <record id="bm_res_country_dep_6_nei_2" model="res.country.neighborhood">
+            <field name="name">Jukyty</field>
+            <field name="code">66</field>
+            <field name="departament_id" ref="bm_res_country_dep_6" />
+        </record>
+        <record id="bm_res_country_dep_6_nei_3" model="res.country.neighborhood">
+            <field name="name">Republicano</field>
+            <field name="code">67</field>
+            <field name="departament_id" ref="bm_res_country_dep_6" />
+        </record>
+        <record id="bm_res_country_dep_6_nei_3" model="res.country.neighborhood">
+            <field name="name">Santa Librada</field>
+            <field name="code">68</field>
+            <field name="departament_id" ref="bm_res_country_dep_6" />
+        </record>
+
+        <!-- <record model="ir.config_parameter" id="hr_presence_control_login" forcecreate="False">
+            <field name="key">hr.hr_presence_control_login</field>
+            <field name="value">True</field>
+        </record> -->
+
+    </data>
+</odoo>

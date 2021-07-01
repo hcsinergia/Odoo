@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="official_salary_wizard_view" model="ir.ui.view">
+            <field name="name">bm.official.wizard.view</field>
+            <field name="model">bm.official.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group col="2" colspan="4">
+                            <field name="message" nolabel="1" />
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button string="Cerrar" class="oe_highlight" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="official_salary_wizard_action" model="ir.actions.act_window">
+            <field name="name">Movimientos de Salarios</field>
+            <field name="res_model">bm.official.salary.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="domain">[]</field>
+            <field name="target">new</field>
+        </record>
+
+        <record id="bm_official_wizard_action" model="ir.actions.act_window">
+            <field name="name">Funcionarios</field>
+            <field name="res_model">bm.official.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+    </data>
+</odoo>
