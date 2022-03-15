@@ -9,7 +9,7 @@ class ApiWsControlClientePayroll:
     """
     # Servicio: Consulta Cliente Payroll (últimos 35 días si cobro)
     Metodo: POST
-    URL: https://10.100.14.2:9280/bantotal/servlet/com.dlya.bantotal.odwsbt_BSPayroll?WSControlClientePayroll
+    URL: https://10.1.41.33:9280/bantotal/servlet/com.dlya.bantotal.odwsbt_BSPayroll?WSControlClientePayroll
     """
 
     def __init__(self, base_url, authenticate):

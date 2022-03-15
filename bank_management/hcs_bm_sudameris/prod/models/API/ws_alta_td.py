@@ -7,7 +7,7 @@ class ApiWsAltaTD:
     """
     # Servicio: Alta de TD (MAESTRO-VISA)
     Metodo: POST
-    URL: https://10.100.14.2:9280/bantotal/servlet/com.dlya.bantotal.odwsbt_BSPayroll?WSAltaTD
+    URL: https://10.1.41.33:9280/bantotal/servlet/com.dlya.bantotal.odwsbt_BSPayroll?WSAltaTD
     """
 
     def __init__(self, base_url, authenticate):

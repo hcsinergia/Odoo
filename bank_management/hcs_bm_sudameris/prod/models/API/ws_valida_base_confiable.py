@@ -9,7 +9,7 @@ class ApiWsValidaBaseConfiable:
     """
     # Servicio: Validación de documentos contra la base BCP/BASE CONFIABLE
     Metodo: POST
-    URL: http://10.100.14.2:9280/bantotal/servlet/com.dlya.bantotal.odwsbt_BSPAYROOL?WSValidaBaseConfiable
+    URL: http://10.1.41.33:9280/bantotal/servlet/com.dlya.bantotal.odwsbt_BSPAYROOL?WSValidaBaseConfiable
     """
 
     def __init__(self, base_url, authenticate):

@@ -2,17 +2,17 @@ class BM_ApiBase:
     """# API Exclusiva para Sudameris Bank"""
     def __init__(self, config_parameter):
         self.config_parameter = config_parameter
-        self.base_url = "http://10.1.41.33:9280/bantotal/servlet/com.dlya.bantotal.odwsbt_BSPAYROLL?"
+        self.base_url = "http://10.100.14.2:9280/bantotal/servlet/com.dlya.bantotal.odwsbt_BSPAYROOL?"
         self.authenticate = {
             "Btinreq" : {
-                "Device": "192.168.52.13",
-                "Usuario": "ARGONUSR",
+                "Device": "10.103.103.31",
+                "Usuario": "GEIER",
                 "Requerimiento":"1",
                 "Canal":"BTINTERNO",
                 "Token":""
                 },
-                "UserId": "ARGONUSR",
-                "UserPassword": "Asuncion2022"
+                "UserId": "GEIER",
+                "UserPassword": "Albuquerque2021"
             }
         # Obtengo las credenciales de autenticación
         self.ws_authenticate()

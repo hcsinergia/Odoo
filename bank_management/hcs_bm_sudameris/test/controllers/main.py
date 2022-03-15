@@ -217,7 +217,7 @@ class BM_SessionLogout(Session):
     @http.route('/web/session/logout', type='http', auth="none", website=True, multilang=False, sitemap=False)
     def bm_logout(self):
         import requests, json
-        baseUrl = 'https://secure.sudameris.com.py/api-ext/michi-auth-sudameris'
+        baseUrl = 'https://dev.sudameris.com.py/api-ext/michi-auth-sudameris'
         authRequestUrlUser = baseUrl + '/auth/session'
         for user in request.env['res.users'].sudo().search([('id', '=', request._context['uid'])]):
             if 'X-RshkMichi-AccessToken' in request.httprequest.cookies.keys():

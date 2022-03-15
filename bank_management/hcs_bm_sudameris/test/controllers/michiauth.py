@@ -7,7 +7,7 @@ from odoo.http import request
 import logging
 _logger = logging.getLogger(__name__)
 
-baseUrl = 'https://secure.sudameris.com.py/api-ext/michi-auth-sudameris'
+baseUrl = 'https://dev.sudameris.com.py/api-ext/michi-auth-sudameris'
 deviceIdRequestUrl = baseUrl + '/devices/new-from-ua'
 authRequestUrlUser = baseUrl + '/auth/session'
 authRequestUrlOperator = baseUrl + '/operator-auth/session'

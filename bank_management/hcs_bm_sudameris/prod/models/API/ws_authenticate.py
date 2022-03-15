@@ -12,7 +12,7 @@ class ApiWsAuthenticate:
     """
     # Servicio: Authenticate
     Metodo: POST
-    URL: http://10.100.14.2:9280/bantotal/servlet/com.dlya.bantotal.odwsbt_Authenticate?Execute
+    URL: http://10.1.41.33:9280/bantotal/servlet/com.dlya.bantotal.odwsbt_Authenticate?Execute
     """
 
     def __init__(self, base_url, authenticate, config_parameter):
@@ -132,23 +132,23 @@ class ApiWsAuthenticate:
         return response
 
     def check_session(self, token):
-        """# CHECK SESSION: API Valida Base Confiable"""
+        """# Check Session
+        Devuelve si la sesion todavia es valida.
+        """
+        from types import SimpleNamespace
+        from .ws_estado_ca import ApiWsEstadoCA
+        # Obtengo el Token actual
         self.authenticate['Btinreq']['Token'] = token
+        # Cambio el request_url para utilizar la API.
         request_url = self.request_url.replace(
-            "odwsbt_Authenticate?Execute", "odwsbt_BSPAYROOL?")
-        _api_service = ApiWsValidaBaseConfiable(request_url, self.authenticate)
+            "odwsbt_Authenticate?Execute", "odwsbt_BSPAYROLL?")
+        # Hago la consulta
+        _api = ApiWsEstadoCA(request_url, self.authenticate)
         # Valores por default para checkear si responde bien la consulta
-        # SimpleNamespace lo utilizo para acceder a los parametros por punto "official.country.code_number"
+        # SimpleNamespace lo utilizo para acceder a los parametros por punto tipo: "official.country.code_number"
         official = SimpleNamespace(**{
-            "country": SimpleNamespace(**{
-                "code_number": 586
-            }),
-            "identification_type": "1",
-            "identification_id": "2178913",
-            "name_first": "2178913",
-            "name_second": "",
-            "surname_first": "2178913",
-            "surname_second": "",
-            "birthday": datetime.now().date()
+            "account_number": "1704048",
+            "account_module": "0",
+            "currency_type": "6900"
         })
-        return _api_service.ws_valida_base_confiable(official)
+        return _api.ws_estado_ca(official)

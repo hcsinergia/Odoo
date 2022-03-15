@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "Sudameris: Bank Management",
+    'name': "Bank Management Base",
     'version': '1.0',
 
     'category': 'Human Resources/Employees',
 
-    'summary': 'Sudameris: Centraliza la información de funcionarios por compañias asociadas',
+    'summary': 'Centraliza la información de funcionarios por compañias asociadas',
 
     'description': """
-        Sudameris: Centraliza la información de funcionarios por compañias asociadas
+        Centraliza la información de funcionarios por compañias asociadas
 
         Organizá la plantilla de funcionarios y salarios por compañía asociada al banco
     """,
