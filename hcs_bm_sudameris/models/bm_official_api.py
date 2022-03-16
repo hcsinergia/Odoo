@@ -195,7 +195,7 @@ class BM_OfficialApi(models.Model):
                 self.result['ok'] = True
             else:
                 self.result['error'] = True
-                self.result['message'] = 'No se encontró el estado'
+                self.result['message'] = 'No se obtuvo ningún estado'
         else:
             self.result['error'] = True
             self.result['message'] = 'El funcionario no posee cuenta'

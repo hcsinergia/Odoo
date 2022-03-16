@@ -73,30 +73,31 @@ class ApiWsClientePoseeCuenta:
             logger.info([self.service, request])
             request = json.loads(request)
 
-            for rec in request['Result']['Consultas']['RepCons.Consulta']:
-                for column in rec['Columnas']['RepCols.Columna']:
-                    if column['Descripcion'] == 'CTNRO':
-                        response["Cuenta"] = column['Filas']['RepFilas.Fila'][0]['Valor'] if len(
-                            column['Filas']['RepFilas.Fila']) else ""
-
-                    if column['Descripcion'] == 'SUCURSAL':
-                        response["Sucursal"] = column['Filas']['RepFilas.Fila'][0]['Valor'] if len(
-                            column['Filas']['RepFilas.Fila']) else ""
-
-                    if column['Descripcion'] == 'Ttnom':
-                        response["Ttnom"] = column['Filas']['RepFilas.Fila'][0]['Valor'] if len(
-                            column['Filas']['RepFilas.Fila']) else ""
-
-                    if column['Descripcion'] == 'Cttfir':
-                        response["Cttfir"] = column['Filas']['RepFilas.Fila'][0]['Valor'] if len(
-                            column['Filas']['RepFilas.Fila']) else ""
-
-                    if column['Descripcion'] == 'Observacion':
-                        response["Observacion"] = column['Filas']['RepFilas.Fila'][0]['Valor'] if len(
-                            column['Filas']['RepFilas.Fila']) else ""
-
             for BTErrorNegocio in request['Erroresnegocio']['BTErrorNegocio']:
                 response["Erroresnegocio"] = BTErrorNegocio['Descripcion']
+
+            if not response['Erroresnegocio']:
+                for rec in request['Result']['Consultas']['RepCons.Consulta']:
+                    for column in rec['Columnas']['RepCols.Columna']:
+                        if column['Descripcion'] == 'CTNRO':
+                            response["Cuenta"] = column['Filas']['RepFilas.Fila'][0]['Valor'] if len(
+                                column['Filas']['RepFilas.Fila']) else ""
+
+                        if column['Descripcion'] == 'SUCURSAL':
+                            response["Sucursal"] = column['Filas']['RepFilas.Fila'][0]['Valor'] if len(
+                                column['Filas']['RepFilas.Fila']) else ""
+
+                        if column['Descripcion'] == 'Ttnom':
+                            response["Ttnom"] = column['Filas']['RepFilas.Fila'][0]['Valor'] if len(
+                                column['Filas']['RepFilas.Fila']) else ""
+
+                        if column['Descripcion'] == 'Cttfir':
+                            response["Cttfir"] = column['Filas']['RepFilas.Fila'][0]['Valor'] if len(
+                                column['Filas']['RepFilas.Fila']) else ""
+
+                        if column['Descripcion'] == 'Observacion':
+                            response["Observacion"] = column['Filas']['RepFilas.Fila'][0]['Valor'] if len(
+                                column['Filas']['RepFilas.Fila']) else ""
 
         except Exception as e:
             exp_message = str(e)

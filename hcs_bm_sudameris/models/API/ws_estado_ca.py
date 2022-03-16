@@ -80,6 +80,9 @@ class ApiWsEstadoCA:
             logger.info([self.service, request])
             request = json.loads(request)
 
+            for BTErrorNegocio in request['Erroresnegocio']['BTErrorNegocio']:
+                response["Erroresnegocio"] = BTErrorNegocio['Descripcion']
+
             for rec in request['Result']['Consultas']['RepCons.Consulta']:
                 for column in rec['Columnas']['RepCols.Columna']:
                     if column['Descripcion'] == 'Sccta':
@@ -101,9 +104,6 @@ class ApiWsEstadoCA:
                     if column['Descripcion'] == 'Scsuc':
                         response["Scsuc"] = column['Filas']['RepFilas.Fila'][0]['Valor'] if len(
                             column['Filas']['RepFilas.Fila']) else ""
-
-            for BTErrorNegocio in request['Erroresnegocio']['BTErrorNegocio']:
-                response["Erroresnegocio"] = BTErrorNegocio['Descripcion']
 
         except Exception as e:
             exp_message = str(e)

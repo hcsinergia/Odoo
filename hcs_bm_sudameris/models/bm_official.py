@@ -471,12 +471,13 @@ class BM_Official(models.Model):
     # endregion
 
     # region ACTIONS API
-    def action_verificar_cuenta(self):
+    def action_verificar_cuenta(self, return_self = False):
         """
         # Action: Verificar Cuenta
         # - Verifica Base Confiable | Desactivo porque no se requiere para verificar cuenta
         - Cliente Posee Cuenta
         - Estado de Caja de Ahorro
+        - Estado de Tarjeta de Debito
 
         # Observaciones
         - official: Si paso el parametro, va a verificar solo el funcionario que le pasé
@@ -495,7 +496,10 @@ class BM_Official(models.Model):
             },
             'eca': {
                 'ok': [],
-                'pass': [],
+                'error': []
+            },
+            'etd': {
+                'ok': [],
                 'error': []
             }
         }
@@ -516,51 +520,72 @@ class BM_Official(models.Model):
             if cpc_result['ok']:
                 result['cpc']['ok'].append(official.name)
             elif cpc_result['pass']:
+                result['cpc']['ok'].append(official.name)
                 result['cpc']['pass'].append(official.name)
             elif cpc_result['error']:
                 result['cpc']['error'].append('{}: {}'.format(official.name, cpc_result['message']))
 
-            # Estado de Caja de Ahorro
+            # Si el funcionario posee cuenta, verifico el estado de la caja de ahorro y la tarjeta de debito
             if cpc_result['ok'] or cpc_result['pass']:
+                # Estado de Caja de Ahorro
                 eca_result = self.ws_estado_ca(official)
                 if eca_result['ok']:
                     result['eca']['ok'].append(official.name)
-                elif eca_result['pass']:
-                    result['eca']['pass'].append(official.name)
                 elif eca_result['error']:
                     result['eca']['error'].append('{}: {}'.format(official.name, eca_result['message']))
 
+                # Si posee caja de ahorro, verifico la tarjeta de debito
+                if eca_result['ok']:
+                    # Estado de Tarjeta de Debito
+                    etd_result = self.ws_estado_td(official)
+                    if etd_result['ok']:
+                        result['etd']['ok'].append(official.name)
+                    elif etd_result['error']:
+                        result['etd']['error'].append('{}: {}'.format(official.name, etd_result['message']))
+
+        result['message'] = 'Se actualizaron {} Cuentas\n'.format(len(result['cpc']['ok']))
+        result['message'] += 'Se actualizaron los estados de {} Cajas de Ahorro\n'.format(len(result['eca']['ok']))
+        result['message'] += 'Se actualizaron los estados de {} Tarjetas de Débito\n\n'.format(len(result['etd']['ok']))
+
         #result['message'] = 'Se validaron {} funcionarios\n'.format(len(result['vbc']['ok']))
-        result['message'] = 'Se obtuvo la cuenta de {} funcionarios\n'.format(len(result['cpc']['ok']))
-        result['message'] += 'Se actualizaron {} estados de Cuentas\n'.format(len(result['eca']['ok']))
-
-
         #if len(result['vbc']['pass']) > 0:
         #    result['message'] += 'Funcionarios no encontrados:\n{}\n\n'.format(
         #        '\n'.join(result['vbc']['pass']))
-        if len(result['cpc']['pass']) > 0:
-            result['message'] += 'Ya poseia Cuenta:\n{}\n\n'.format(
-                '\n'.join(result['cpc']['pass']))
-
         #if len(result['vbc']['error']) > 0:
         #    result['message'] += 'Errores al validar:\n{}\n\n'.format(
         #        '\n'.join(result['vbc']['error']))
+
+        if len(result['cpc']['pass']) > 0:
+            result['message'] += 'Ya poseian datos los siguientes funcionarios:\n'
+            result['message'] += 'Cuenta:\n{}\n\n'.format(
+                '\n'.join(result['cpc']['pass']))
+
+
+        if len(result['cpc']['error']) > 0 or len(result['eca']['error']) > 0 or len(result['etd']['error']) > 0:
+                result['message'] += 'Se encontraron los siguientes inconvenientes:\n'
+
         if len(result['cpc']['error']) > 0:
-            result['message'] += 'Errores al obtener la Cuenta:\n{}\n\n'.format(
+            result['message'] += 'Cliente Posee Cuenta:\n{}\n\n'.format(
                 '\n'.join(result['cpc']['error']))
         if len(result['eca']['error']) > 0:
-            result['message'] += 'Errores al obtener el estado de Cuenta:\n{}\n\n'.format(
+            result['message'] += 'Estado de Cuenta:\n{}\n\n'.format(
                 '\n'.join(result['eca']['error']))
+        if len(result['etd']['error']) > 0:
+            result['message'] += 'Estado de Tarjeta de Débito:\n{}\n\n'.format(
+                '\n'.join(result['etd']['error']))
 
-        return self.show_message('Verificar cuenta', result['message'])
+        if return_self:
+            return result
+        else:
+            return self.show_message('Verificar cuenta', result['message'])
 
     def action_create_account(self):
         """
         # Action: Crear Cuenta
+        - Verificar cuenta
         - Alta de Cuenta
         - Alta de Caja de Ahorro
         - Alta de Tarjeta Débito (VISA-MASTERCARD)
-        - Estado de CA
         """
         result = {
             'message': '',
@@ -574,80 +599,83 @@ class BM_Official(models.Model):
                 'pass': [],
                 'error': []
             },
-            'eca': {
-                'ok': [],
-                'pass': [],
-                'error': []
-            },
             'atd': {
                 'ok': [],
                 'error': []
-            }
+            }            
         }
+
+        # Verifico el estado de cuenta de todos los funcionarios
+        verif_result = self.action_verificar_cuenta(True)
+
         # Verifico cada funcionario seleccionado
         for official in self.env['bm.official'].browse(self._context.get('active_ids')) or self:
-            # Alta de cuenta
-            ac_result = self.ws_alta_cuenta(official)
-            if ac_result['ok']:
-                result['ac']['ok'].append(official.name)
-            elif ac_result['pass']:
-                result['ac']['pass'].append(official.name)
-            elif ac_result['error']:
-                result['ac']['error'].append('{}: {}'.format(official.name, ac_result['message']))
+            # Si el funcioanrio NO posee cuenta, la creo
+            if official.name not in verif_result['cpc']['ok']:
+                # Alta de cuenta
+                ac_result = self.ws_alta_cuenta(official)
+                if ac_result['ok']:
+                    result['ac']['ok'].append(' - %s' % official.name)
+                elif ac_result['pass']:
+                    result['ac']['pass'].append(' - %s' % official.name)
+                elif ac_result['error']:
+                    result['ac']['error'].append('{}: {}'.format(' - %s' % official.name, ac_result['message']))
 
-            # Alta de Caja de Ahorro
-            if ac_result['ok'] or ac_result['pass']:
-                aca_result = self.ws_alta_ca(official)
-                if aca_result['ok']:
-                    result['aca']['ok'].append(official.name)
-                elif aca_result['pass']:
-                    result['aca']['pass'].append(official.name)
-                elif aca_result['error']:
-                    result['aca']['error'].append('{}: {}'.format(official.name, ac_result['message']))
+                # Si se creo la cuenta, tambien creo la caja de ahorro y la tarjeta de debito
+                if ac_result['ok']: 
+                    # Alta de Caja de Ahorro
+                    aca_result = self.ws_alta_ca(official)
+                    if aca_result['ok']:
+                        result['aca']['ok'].append(' - %s' % official.name)
+                    elif aca_result['pass']:
+                        result['aca']['pass'].append(' - %s' % official.name)
+                    elif aca_result['error']:
+                        result['aca']['error'].append('{}: {}'.format(' - %s' % official.name, ac_result['message']))
 
-                # Estado de Caja de Ahorro
-                if aca_result['ok'] or aca_result['pass']:
-                    eca_result = self.ws_estado_ca(official)
-                    if eca_result['ok']:
-                        result['eca']['ok'].append(official.name)
-                    elif eca_result['pass']:
-                        result['eca']['pass'].append(official.name)
-                    elif eca_result['error']:
-                        result['eca']['error'].append('{}: {}'.format(official.name, eca_result['message']))
-
-                # Alta de Tarjeta de Débito
-                if ac_result['ok'] or ac_result['pass'] and aca_result['ok'] or aca_result['pass']:
+                    # Alta de Tarjeta de Débito
                     atd_result = self.ws_alta_td(official)
                     if atd_result['ok']:
-                        result['atd']['ok'].append(official.name)
+                        result['atd']['ok'].append(' - %s' % official.name)
                     elif atd_result['error']:
-                        result['atd']['error'].append('{}: {}'.format(official.name, atd_result['message']))
+                        result['atd']['error'].append('{}: {}'.format(' - %s' % official.name, atd_result['message']))
 
+        # Vuelvo a verificar las cuentas para actualizar los estados de cuentas
+        verif_result = self.action_verificar_cuenta(True)
 
         result['message'] = 'Se crearon {} Cuentas\n'.format(len(result['ac']['ok']))
         result['message'] += 'Se crearon {} Cajas de Ahorro\n'.format(len(result['aca']['ok']))
-        result['message'] += 'Se actualizaron {} estados de Cuentas\n'.format(len(result['eca']['ok']))
         result['message'] += 'Se crearon {} Tarjetas de Débito\n\n'.format(len(result['atd']['ok']))
+        result['message'] += 'Se actualizaron los estados de {} Cajas de Ahorro\n'.format(len(verif_result['eca']['ok']))
+        result['message'] += 'Se actualizaron los estados de {} Tarjetas de Débito\n\n'.format(len(verif_result['etd']['ok']))
+
+        if len(result['ac']['pass']) > 0 or len(result['ac']['pass']) > 0:
+            result['message'] += 'Ya poseian datos los siguientes funcionarios:\n'
 
         if len(result['ac']['pass']) > 0:
-            result['message'] += 'Ya poseia Cuenta:\n{}\n\n'.format(
+            result['message'] += 'Cuenta:\n{}\n\n'.format(
                 '\n'.join(result['ac']['pass']))
         if len(result['ac']['pass']) > 0:
-            result['message'] += 'Ya poseia Caja de Ahorro:\n{}\n\n'.format(
+            result['message'] += 'Caja de Ahorro:\n{}\n\n'.format(
                 '\n'.join(result['aca']['pass']))
 
+        if len(result['ac']['error']) > 0 or len(result['ac']['error']) > 0 or len(result['atd']['error']) > 0 \
+            or len(verif_result['eca']['error']) > 0 or len(verif_result['etd']['error']) > 0:
+                result['message'] += 'Se encontraron los siguientes inconvenientes:\n'
         if len(result['ac']['error']) > 0:
-            result['message'] += 'Errores al crear Cuenta:\n{}\n\n'.format(
+            result['message'] += 'Alta de Cuenta:\n{}\n\n'.format(
                 '\n'.join(result['ac']['error']))
-        if len(result['ac']['error']) > 0:
-            result['message'] += 'Errores al crear Caja de Ahorro:\n{}\n\n'.format(
+        if len(result['aca']['error']) > 0:
+            result['message'] += 'Alta de Caja de Ahorro:\n{}\n\n'.format(
                 '\n'.join(result['aca']['error']))
-        if len(result['eca']['error']) > 0:
-            result['message'] += 'Errores al obtener el estado de Cuenta:\n{}\n\n'.format(
-                '\n'.join(result['eca']['error']))
         if len(result['atd']['error']) > 0:
-            result['message'] += 'Errores al crear Tarjeta de Débito:\n{}\n\n'.format(
+            result['message'] += 'Alta de Tarjeta de Débito:\n{}\n\n'.format(
                 '\n'.join(result['atd']['error']))
+        if len(verif_result['eca']['error']) > 0:
+            result['message'] += 'Estado de Cuenta:\n{}\n\n'.format(
+                '\n'.join(verif_result['eca']['error']))
+        if len(verif_result['etd']['error']) > 0:
+            result['message'] += 'Estado de Tarjeta de Débito:\n{}\n\n'.format(
+                '\n'.join(verif_result['etd']['error']))
 
         return self.show_message('Alta de cuentas', result['message'])
     # endregion
@@ -969,6 +997,7 @@ class BM_Official(models.Model):
             official.account_number = None
             official.account_name = None
             official.account_status = None
+            official.account_registration = None
             official.branch_id = None
             official.reliable_base = False
             official.segmentation_aproved = False

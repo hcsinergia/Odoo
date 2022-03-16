@@ -58,14 +58,20 @@ class ApiWsControlClientePayroll:
             logger.info([self.service, request])
             request = json.loads(request)
 
-            response["FcUltCobro"] = request["FcUltCobro"]
-            response["Ctfalt"] = request["Ctfalt"]
-            response["ENTFCBAJA"] = request["ENTFCBAJA"]
-            response["GxExiste"] = request["GxExiste"]
-            response["CodRetorno"] = request["CodRetorno"]
-            response["Mensaje"] = request["Mensaje"]
             for BTErrorNegocio in request['Erroresnegocio']['BTErrorNegocio']:
                 response["Erroresnegocio"] = BTErrorNegocio['Descripcion']
+
+            if not response['Erroresnegocio']:
+                if 'FcUltCobro' in request:
+                    response["FcUltCobro"] = request["FcUltCobro"]
+                if 'Ctfalt' in request:
+                    response["Ctfalt"] = request["Ctfalt"]
+                if 'ENTFCBAJA' in request:
+                    response["ENTFCBAJA"] = request["ENTFCBAJA"]
+                if 'GxExiste' in request:
+                    response["GxExiste"] = request["GxExiste"]
+                response["CodRetorno"] = request["CodRetorno"]
+                response["Mensaje"] = request["Mensaje"]
 
         except Exception as e:
             exp_message = str(e)

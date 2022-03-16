@@ -63,18 +63,19 @@ class ApiWsEstadoTD:
             logger.info([self.service, request])
             request = json.loads(request)
 
-            for resp in response['Result']['Consultas']['RepCons.Consulta']:
-                for columna in resp['Columnas']['RepCols.Columna']:
-                    if columna['Descripcion'] == 'Scstat':
-                        response["Scstat"] = columna['Filas']['RepFilas.Fila'][0]['Valor'] if len(
-                            columna['Filas']['RepFilas.Fila']) else ""
-
-                    if columna['Descripcion'] == 'Observacion':
-                        response["Observacion"] = columna['Filas']['RepFilas.Fila'][0]['Valor'] if len(
-                            columna['Filas']['RepFilas.Fila']) else ""
-
             for BTErrorNegocio in request['Erroresnegocio']['BTErrorNegocio']:
-                response["Erroresnegocio"] = BTErrorNegocio['Descripcion']
+                response['Erroresnegocio'] = BTErrorNegocio['Descripcion']
+
+            if not response['Erroresnegocio']:
+                for resp in response['Result']['Consultas']['RepCons.Consulta']:
+                    for columna in resp['Columnas']['RepCols.Columna']:
+                        if columna['Descripcion'] == 'Scstat':
+                            response["Scstat"] = columna['Filas']['RepFilas.Fila'][0]['Valor'] if len(
+                                columna['Filas']['RepFilas.Fila']) else ""
+
+                        if columna['Descripcion'] == 'Observacion':
+                            response["Observacion"] = columna['Filas']['RepFilas.Fila'][0]['Valor'] if len(
+                                columna['Filas']['RepFilas.Fila']) else ""
 
         except Exception as e:
             exp_message = str(e)

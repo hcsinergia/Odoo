@@ -57,12 +57,16 @@ class ApiWsConsultaCuentaServicio:
             logger.info([self.service, request])
             request = json.loads(request)
 
-            response["Mensaje"] = request["Mensaje"]
-            response["NroContrato"] = request["NroContrato"]
-            response["DesContrato"] = request["DesContrato"]
-            response["Datos"] = request["Datos"]
             for BTErrorNegocio in request['Erroresnegocio']['BTErrorNegocio']:
                 response["Erroresnegocio"] = BTErrorNegocio['Descripcion']
+
+            if not response['Erroresnegocio']:
+                if 'NroContrato' in request:
+                    response["NroContrato"] = request["NroContrato"]
+                if 'DesContrato' in request:
+                    response["DesContrato"] = request["DesContrato"]
+                response["Mensaje"] = request["Mensaje"]
+                response["Datos"] = request["Datos"]
 
         except Exception as e:
             exp_message = str(e)

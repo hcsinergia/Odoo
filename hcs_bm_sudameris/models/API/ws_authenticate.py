@@ -114,11 +114,13 @@ class ApiWsAuthenticate:
             logger.info([self.service, request])
             request = json.loads(request)
 
-            response['SessionToken'] = request["SessionToken"]
-            response['Fecha'] = request['Btoutreq']['Fecha']
-            response['Hora'] = request['Btoutreq']['Hora']
             for BTErrorNegocio in request['Erroresnegocio']['BTErrorNegocio']:
                 response["Erroresnegocio"] = BTErrorNegocio['Descripcion']
+
+            if not response['Erroresnegocio']:
+                response['SessionToken'] = request["SessionToken"]
+                response['Fecha'] = request['Btoutreq']['Fecha']
+                response['Hora'] = request['Btoutreq']['Hora']
 
         except Exception as e:
             exp_message = str(e)
@@ -144,9 +146,10 @@ class ApiWsAuthenticate:
         _api = ApiWsEstadoCA(request_url, self.authenticate)
         # Valores por default para checkear si responde bien la consulta
         # SimpleNamespace lo utilizo para acceder a los parametros por punto tipo: "official.country.code_number"
-        official = SimpleNamespace(**{
+        _official = SimpleNamespace(**{
             "account_number": "1704048",
             "account_module": "0",
             "currency_type": "6900"
         })
-        return _api.ws_estado_ca(official)
+        logger.info([self.authenticate, request_url, _official])
+        return _api.ws_estado_ca(_official)

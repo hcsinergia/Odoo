@@ -99,12 +99,16 @@ class ApiWsAltaCuenta:
             logger.info([self.service, request])
             request = json.loads(request)
 
-            response["CtNro"] = request["CtNro"]
-            response["CtNom"] = request["CtNom"]
-            response["CodRetorno"] = request["CodRetorno"]
-            response["Mensaje"] = request["Mensaje"]
             for BTErrorNegocio in request['Erroresnegocio']['BTErrorNegocio']:
                 response["Erroresnegocio"] = BTErrorNegocio['Descripcion']
+
+            if not response['Erroresnegocio']:
+                if 'CtNro' in request:
+                    response["CtNro"] = request["CtNro"]
+                if 'CtNom' in request:
+                    response["CtNom"] = request["CtNom"]
+                response["CodRetorno"] = request["CodRetorno"]
+                response["Mensaje"] = request["Mensaje"]
 
         except Exception as e:
             exp_message = str(e)
