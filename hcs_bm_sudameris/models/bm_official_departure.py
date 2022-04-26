@@ -7,7 +7,7 @@ DEPARTURE_REASONS = [('medical', 'Medica'), ('fired', 'Despido'), ('resigned', '
 
 class BM_OfficialDeparture(models.Model):
     _name = 'bm.official.departure'
-    _description = 'BM Official Departure'
+    _description = 'Licencia del funcionario'
 
     name = fields.Char(compute='_compute_name')
     official = fields.Many2one('bm.official', 'Funcionario')
@@ -22,12 +22,12 @@ class BM_OfficialDeparture(models.Model):
         string="Estado", default='active')
 
     def write(self, vals):
-        res = super(BM_OfficialDeparture, self).write(vals)
+        res = super(BM_OfficialDeparture, self)
         departure_limit = datetime.now() + timedelta(35)
         self.official.state = 'departured'
         if self.departure_reason == 'medical' and (self.departure_end > departure_limit.date()):
             print("SE EXEDE 35 DIAS")
-        return res
+        return res.write(vals)
 
     @api.depends('official', 'departure_reason', 'departure_end')
     def _compute_name(self):

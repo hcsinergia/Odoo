@@ -324,24 +324,32 @@ class BM_Official(models.Model):
 
     # region OVERRIDES
     def write(self, vals):
-        res = super(BM_Official, self).write(vals)
         # Primer horario: 8:30
         time_first = datetime.now().replace(hour=8, minute=30, second=0, microsecond=0)
         # Segundo horario: 16:00
         time_last = datetime.now().replace(hour=16, minute=0, second=0, microsecond=0)
         # Si se realizaron cambios fuera de los horarios estipulados, se notifican
         if datetime.now() < time_first or datetime.now() > time_last:
-            print('Se realizaron cambios fuera de horario')
-            #self.notify_to_channel('bm_mail_channel_group_bm_bank_payroll', 'Cambios fuera de horario', 'Se realizaron cambios fuera de horario: {}'.format(vals))
-            # if self.segmentation_aproved and not self.state == 'check_cam':
-            #    self.state = 'check_cam'
-        # Motivo de rechazo
-        # if not self.reject_reason:
-        #    if self.account_status in ['75', '76', '77']:
-        #        # Guardo el texto del selection
-        #        self.reject_reason = dict(self._fields['account_status'].selection).get(self.account_status)
-        #    else:
-        #        self.reject_reason = None
+            # Notifica a los usuarios de Centro Payroll que se realizaron modificaciones fuera de horario  | Posiblemente haya que ajustar esta notificacion
+            edited_vals = []
+            # Filtro los campos que no se actualizan solos
+            for idx in vals:
+                if idx not in ['account_module', 'account_number', 'account_name', 'account_status',
+                            'account_registration', 'branch_id', 'coach_id',
+                            'company_id', 'departured', 'departure_medical', 'refer_cam_date',
+                            'group_type', 'image_1920', 'job_title', 'name', 'parent_id',
+                            'idenfitication_image_front', 'idenfitication_image_back',
+                            'idenfitication_image_pdf', 'idenfitication_image_pdf_name',
+                            'authorization_image_pdf', 'authorization_image_pdf_name',
+                            'reject_reason', 'segmentation', 'state', 'welcome_kit']:
+                   edited_vals.append('{}: {} → {}'.format(self._fields[idx].string, self[idx] or 'Vacio', vals[idx] or 'Vacio'))
+            # Si hay algun dato que se haya editado a mano, lo notifico
+            if edited_vals:
+                edited_msg = 'El usuario {} realizó cambios fuera de horario.<br><br>Funcionario: {}<br>{}'.format(self.env.user.name, '{} ({})'.format(self.name, self.identification_id),'<br>'.join(edited_vals))
+                logger.info(edited_msg)
+                self.notify_to_channel_users('bm_mail_channel_group_bm_bank_payroll', 'Cambios fuera de horario', edited_msg)
+            
+        res = super(BM_Official, self).write(vals)
         return res
     # endregion
 
@@ -356,49 +364,51 @@ class BM_Official(models.Model):
             'target': 'new'
         }
 
-    def notify_to_channel(self, _channel, _subject, _message):
-        channel_obj = self.env.ref('hcs_bm_sudameris.{}'.format(_channel))
-        if channel_obj:
-            self.env['mail.message'].sudo().create({
-                'email_from': '"Sudameris BOT" <info@sudameris.com.py>',  # Email
-                # Odoo bot ID
-                'author_id': self.env['res.users'].search(['&', ('active', '=', False), ('id', '=', 1)]).id,
-                'model': 'mail.channel',
-                'subject': _subject,
-                'message_type': 'comment',
-                'subtype_id': self.env.ref('mail.mt_comment').id,
-                'body': _message,
-                # This is the channel where you want to send the message and all the users of this channel will receive message
-                'channel_ids': [(4, channel_obj.id)],
-                'res_id': channel_obj.id,  # here add the channel you created.
-            })
-
-    def notify_to_users(self, _company, _subject, _message):
-        # Obtengo a todos los usuarios
-        users = self.env['res.users'].search([('company_ids', 'in', _company)])
-        bot = self.env['res.users'].search(['&', ('active', '=', False), ('id', '=', 1)])
-        channel_obj = self.env['mail.channel'].sudo()
-        if users.ids:
-            for user in users:
-                channel_name = '%s, %s' % (bot.name, user.name)
-                channel_id = channel_obj.search([('name', 'like', channel_name)])
-                # Si no existe el canal, lo creo
-                if not channel_id:
-                    channel_id = channel_obj.create({
-                        'name': channel_name,
-                        'email_send': False,
-                        'channel_type': 'chat',
-                        'public': 'private'
-                    })
-                    # Reescribo los usuarios subscriptos y agrego solo al bot y al usuario
-                    channel_id.channel_partner_ids = [(6, 0, [bot.partner_id.id, user.partner_id.id])]
-                    #(0, 0, {'partner_id': bot.partner_id.id})
+    def notify_to_channel_users(self, _channel, _subject, _message):
+        try:
+            # Obtiene el canal del objeto mail.channel()
+            channel_id = self.env.ref('hcs_bm_sudameris.{}'.format(_channel))
+            if channel_id:
                 channel_id.message_post(
+                    author_id=1, # Sudameris BOT
                     subject=_subject,
                     body=_message,
                     message_type='comment',
                     subtype='mail.mt_comment',
                 )
+        except Exception as e:
+            logger.critical(e)
+
+    def notify_to_company_users(self, _company_id, _subject, _message):
+        try:
+            channel_obj = self.env['mail.channel'].sudo()
+            # Obtengo a todos los usuarios de la compañia
+            company = self.company_id.browse(_company_id)
+            #users = self.env.user.search([('company_ids', 'in', company.id)])
+            channel_id = channel_obj.search([('name', 'like', company.name)])
+            # Si no existe el canal, lo creo
+            if not channel_id:
+                channel_id = channel_obj.create({
+                    'name': company.name,
+                    'email_send': True,
+                    'channel_type': 'chat',
+                    'public': 'private'
+                })
+            # Obtengo los contactos de cada usuario dentro de Sudameris Bank y La empresa
+            users_partner_ids = []
+            for user in self.env.user.sudo().search([('company_ids', 'in', [1, company.id])]): users_partner_ids.append(user.partner_id.id)
+            # Reescribo los usuarios subscriptos, para que esten todos los usuarios que tengan acceso a la empresa
+            channel_id.sudo().write({'channel_partner_ids': [(6, 0, users_partner_ids)]})
+            # Envio la notificacion
+            channel_id.message_post(
+                author_id=1, # Sudameris BOT
+                subject=_subject,
+                body=_message,
+                message_type='comment',
+                subtype='mail.mt_comment',
+            )
+        except Exception as e:
+            logger.critical(e)
     # endregion
 
     # region ONCHANGE
@@ -696,6 +706,7 @@ class BM_Official(models.Model):
             'vbc': None
         }
 
+        account_result = None
         for official in self.env['bm.official'].browse(self._context.get('active_ids')) or self:
 
             # Chequeo si tiene cuenta
@@ -720,7 +731,6 @@ class BM_Official(models.Model):
                 continue
 
             # Si está en borrador, pasa a estar en proceso de alta (Centro Payroll)
-            account_result = None
             if official.state in ['draft']:
                 # Verifico la cuenta del funcionario
                 account_result = self.action_verificar_cuenta()
@@ -730,6 +740,7 @@ class BM_Official(models.Model):
             if official.state in ['error']:
                 official.state = 'check_cam'
 
+            # Si está en 'Centro Payroll o Centro Altas Masivas', se guarda la fecha y hora del momento que llegó. 
             if official.state in ['check_payroll', 'check_cam']:
                 if not official.refer_cam_date : official.refer_cam_date = datetime.now().strftime('%d/%m/%Y %H:%M:%S')
                 result['count_ok'] += 1
@@ -755,7 +766,7 @@ class BM_Official(models.Model):
 
         if result['count_ok'] > 0:
             # Notifica a los usuarios de Centro Payroll que tiene altas
-            self.notify_to_channel('bm_mail_channel_group_bm_bank_payroll',
+            self.notify_to_channel_users('bm_mail_channel_group_bm_bank_payroll',
                                    'Funcionarios a aprobar',
                                    'Tiene {} nuevas solicitudes de {} para alta de cuentas.'.format(
                                        result['count_ok'], self.env.company.name))

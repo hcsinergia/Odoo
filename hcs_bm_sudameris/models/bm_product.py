@@ -4,7 +4,7 @@ from odoo import models, fields
 
 class BM_Products(models.Model):
   _name = 'bm.product'
-  _description = 'Welcome Kit'
+  _description = 'Tabla de productos'
 
   name = fields.Char(index=True)
   product_type = fields.Selection([

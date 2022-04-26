@@ -95,12 +95,12 @@ class BM_OfficialSalary_Files(http.Controller):
         sac = req.params.get('sac')
 
 
-        company_debit = http.request.env.user.company_id.bantotal_account
+        company_debit = http.request.env.user.company_id.bantotal_account or ''
         company_currency = '6900' #Guaranies
         if http.request.env.user.company_id.currency_id.name == 'USD':
             company_currency = '1' #Guaranies
 
-        file_content_header = '{};{};{};{};{};{};{};{};{};1;{};10;20;{};0;0;0\n'.format(
+        file_content_header = "{};{};{};{};{};{};{};{};{};{};{};{};{};{};{};{};{}\n".format(
             'H',                            # Identificador de cabecera(C:1)
             '999',                          # Código de contrato(I:9)
             'mail@entidad.com',             # E-mail asociado al Servicio(C:50)

@@ -37,9 +37,8 @@ class BMOfficialWizardRejectCAM(models.TransientModel):
 
         # Notifica a los usuarios de Centro Payroll que tiene altas
         notify_title = 'Rechazo de funcionarios'
-        notify_body = 'se rechazo el alta del funcionario: ({}) {}.'.format(official.identification_id, official.name)
-        official.notify_to_channel('bm_mail_channel_group_bm_bank_payroll', notify_title, notify_body)
-        official.notify_to_users(official.company_id.id, notify_title, notify_body)
+        notify_body = 'Se rechazo el alta del Funcionario: {} ({}).<br>Motivo: {}'.format(official.name, official.identification_id, official.reject_reason)
+        official.notify_to_company_users(official.company_id.id, notify_title, notify_body)
         return True
     
     reject_reason = fields.Selection(REJECT_REASONS, string="Motivo de rechazo", required=True, default='1')
