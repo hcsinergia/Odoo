@@ -212,6 +212,7 @@ class BM_OfficialSalary_Main(http.Controller):
                 })
         return {'success': True, 'message': 'Success'}
 
+
 class BM_SessionLogout(Session):
 
     @http.route('/web/session/logout', type='http', auth="none", website=True, multilang=False, sitemap=False)
