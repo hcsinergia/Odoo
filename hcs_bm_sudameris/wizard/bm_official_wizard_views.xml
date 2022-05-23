@@ -26,7 +26,7 @@
             <field name="target">new</field>
         </record>
         <!-- END Wizard Funcionario -->
-    
+
         <!-- Wizard Funcionario Rechazar CAM -->
         <record id="bm_official_wizard_rejectcam_view_form" model="ir.ui.view">
             <field name="name">bm.official.wizard.rejectcam.form</field>

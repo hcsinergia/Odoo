@@ -18,10 +18,10 @@
             <field name="arch" type="xml">
                 <form string="Paquetes / productos">
                     <!-- <header>
-              <button name="btn_aprobar" string="Aprobar" confirm="¿Estás seguro que deseas aprobar este registro? Verifique el salario antes de aceptar" states="preliquidacion" class="oe_highlight" groups="hr.group_hr_manager" type="object" />
-              <button name="btn_preliquidacion" string="Volver a borrador" confirm="¿Estás seguro que deseas volver este registro a borrador? Verifique el salario antes de aceptar" states="aprobado" class="oe_highlight" type="object" />
-              <field name="state" widget="statusbar" statusbar_visible="preliquidacion,aprobado,enproceso,cancelado,liquidado" statusbar_colors='{"cancelado":"red","aprobado":"blue","liquidado":"green"}' />
-            </header> -->
+                    <button name="btn_aprobar" string="Aprobar" confirm="¿Estás seguro que deseas aprobar este registro? Verifique el salario antes de aceptar" states="preliquidacion" class="oe_highlight" groups="hr.group_hr_manager" type="object" />
+                    <button name="btn_preliquidacion" string="Volver a borrador" confirm="¿Estás seguro que deseas volver este registro a borrador? Verifique el salario antes de aceptar" states="aprobado" class="oe_highlight" type="object" />
+                    <field name="state" widget="statusbar" statusbar_visible="preliquidacion,aprobado,enproceso,cancelado,liquidado" statusbar_colors='{"cancelado":"red","aprobado":"blue","liquidado":"green"}' />
+                    </header> -->
                     <sheet>
                         <field name="product_type" widget="radio" options="{'horizontal': true}" />
                         <group string="Productos simple" attrs="{'invisible':[('product_type', '=', 'kit')]}">
@@ -29,7 +29,7 @@
                         </group>
                         <group string="Productos del paquete" attrs="{'invisible':[('product_type', '!=', 'kit')]}">
                             <field name="name" string="Nombre del kit" placeholder="Nombre del kit" attrs="{'required':[('product_type', '=', 'kit')]}" />
-                            <field name="child_ids" widget="many2many_tags"  options="{'no_create_edit': True}" attrs="{'required':[('product_type', '=', 'kit')]}" placeholder="Productos del kit" />
+                            <field name="child_ids" widget="many2many_tags" options="{'no_create_edit': True}" attrs="{'required':[('product_type', '=', 'kit')]}" placeholder="Productos del kit" />
                             <field name="minimum_salary" />
                         </group>
                     </sheet>

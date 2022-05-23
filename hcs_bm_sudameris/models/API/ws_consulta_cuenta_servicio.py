@@ -46,7 +46,8 @@ class ApiWsConsultaCuentaServicio:
             "Mensaje": "",
             "NroContrato": "",
             "DesContrato": "",
-            "Datos": "",
+            "Canales": "",
+            "Datos": {},
             "Erroresnegocio": ""
         }
 
@@ -65,14 +66,17 @@ class ApiWsConsultaCuentaServicio:
                     response["NroContrato"] = request["NroContrato"]
                 if 'DesContrato' in request:
                     response["DesContrato"] = request["DesContrato"]
+                if 'Canales' in request:
+                    response["Canales"] = request["Canales"]
                 response["Mensaje"] = request["Mensaje"]
                 response["Datos"] = request["Datos"]
 
         except Exception as e:
             exp_message = str(e)
-            if 'HTTPConnectionPool' in exp_message: # HTTPConnectionPool == Conection Timeout
+            if 'HTTPConnectionPool' in exp_message:  # HTTPConnectionPool == Conection Timeout
                 exp_message = '(HTTPConnectionPool): No se puede conectar al banco'
-            logger.error([self.service, 'Exception', exp_message], exc_info=True)
+            logger.error([self.service, 'Exception',
+                         exp_message], exc_info=True)
             response["Erroresnegocio"] = exp_message
 
         return response

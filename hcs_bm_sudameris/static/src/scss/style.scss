@@ -10,14 +10,14 @@ $o-line-height-base: 1.5; // This is BS default
 
 // Colors
 //Original: #7C7BAD
-$o-community-color: #FF0000;
-$o-enterprise-color: #875A7B;
-$o-enterprise-primary-color: #00A09D;
+$o-community-color: #ff0000;
+$o-enterprise-color: #875a7b;
+$o-enterprise-primary-color: #00a09d;
 
 $o-brand-odoo: $o-community-color;
 $o-brand-primary: $o-community-color;
 
-$o-brand-secondary: #FFFFFF;
+$o-brand-secondary: #ffffff;
 $o-brand-lightsecondary: #e2e2e0;
 $o-gray-100: #f8f9fa; // This is BS default
 
@@ -46,13 +46,13 @@ $o-tooltip-title-text-color: #4c4c4c;
 // merge with the default BS variable (but we would have to take care of
 // ordering & cie).
 $o-extra-grid-breakpoints: (
-    xs: 0,
-    vsm: 475px,
-    sm: 576px,
-    md: 768px,
-    lg: 992px,
-    xl: 1200px,
-    xxl: 1534px,
+  xs: 0,
+  vsm: 475px,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
+  xxl: 1534px,
 );
 
 $o-form-group-cols: 12;
@@ -117,15 +117,16 @@ $o-kanban-dashboard-dropdown-complex-gap: 5px;
 // For the frontend part
 $o-theme-font-size-base: (14 / 16) * 1rem;
 
-
 .o_input {
-    border-radius: 20px !important;
+  border-radius: 20px !important;
 }
 
 .o_kanban_view.o_kanban_ungrouped .o_kanban_record {
-    border-radius: 20px 0 0 0 !important;
+  border-radius: 20px 0 0 0 !important;
 }
 
-.o_kanban_view .o_kanban_record.o_kanban_record_has_image_fill .o_kanban_image_fill_left {
-    border-radius: 20px 0 20px 0 !important;
+.o_kanban_view
+  .o_kanban_record.o_kanban_record_has_image_fill
+  .o_kanban_image_fill_left {
+  border-radius: 20px 0 20px 0 !important;
 }

@@ -61,6 +61,7 @@ CIENTOS = (
     'novecientos'
 )
 
+
 class BM_OfficialSalaryNTL(models.Model):
     _inherit = "bm.official.salary"
 
@@ -75,7 +76,8 @@ class BM_OfficialSalaryNTL(models.Model):
         if parte_decimal > 9:
             letras_decimal = 'punto %s' % self.numero_a_letras(parte_decimal)
         elif parte_decimal > 0:
-            letras_decimal = 'punto cero %s' % self.numero_a_letras(parte_decimal)
+            letras_decimal = 'punto cero %s' % self.numero_a_letras(
+                parte_decimal)
         if (numero_entero <= 99):
             resultado = self.leer_decenas(numero_entero)
         elif (numero_entero <= 999):
@@ -109,7 +111,8 @@ class BM_OfficialSalaryNTL(models.Model):
             moneda = MONEDA_PLURAL
         letras = self.numero_a_letras(numero_entero)
         letras = letras.replace('uno', 'un')
-        letras_decimal = 'con %s %s' % (self.numero_a_letras(parte_decimal).replace('uno', 'un'), centimos)
+        letras_decimal = 'con %s %s' % (self.numero_a_letras(
+            parte_decimal).replace('uno', 'un'), centimos)
         letras = '%s de %s %s' % (letras, moneda, letras_decimal)
         return letras
 

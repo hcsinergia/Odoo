@@ -2,6 +2,8 @@
 from odoo import http
 from odoo.http import request
 from odoo.addons.web.controllers.main import Session
+import requests
+import json
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -15,7 +17,8 @@ class BM_OfficialSalary_Main(http.Controller):
         if login_companies:
             for login_bantotal_account in login_companies:
                 # API para obtener el ID de la compañia
-                service_response = request.env['bm.official'].ws_consulta_cuenta_servicio(login_bantotal_account)
+                service_response = request.env['bm.official'].ws_consulta_cuenta_servicio(
+                    login_bantotal_account)
                 _logger.info(['ws_consulta_cuenta_servicio', {
                     'ok': service_response['ok'],
                     'name': service_response['data']['DesContrato'],
@@ -31,23 +34,33 @@ class BM_OfficialSalary_Main(http.Controller):
                         'bantotal_account': login_bantotal_account,
                         'accounts': service_response['data']['Datos']['sBTCuenta_Lista']
                     }
-                    _logger.info(['ws_consulta_cuenta_servicio_vals', {'vals': vals}])
-                    _logger.info(['ws_consulta_cuenta_servicio_odoo_companies', {'odoo_companies': odoo_companies}])
+                    _logger.info(
+                        ['ws_consulta_cuenta_servicio_vals', {'vals': vals}])
+                    _logger.info(['ws_consulta_cuenta_servicio_odoo_companies', {
+                                 'odoo_companies': odoo_companies}])
                     # Busco la empresa dentro de odoo
-                    login_company = odoo_companies.search([('bantotal_account', '=', login_bantotal_account)])
-                    _logger.info(['ws_consulta_cuenta_servicio_login_company', {'login_company': login_company}])
+                    login_company = odoo_companies.search(
+                        [('bantotal_account', '=', login_bantotal_account)])
+                    _logger.info(['ws_consulta_cuenta_servicio_login_company', {
+                                 'login_company': login_company}])
 
                     # Si no existe, la creo
                     if not login_company:
                         # Verifico que la empresa no esté cargada previamente sin bantotal_account
-                        odoo_company_exist = odoo_companies.search([('company_code', '=', vals['company_code'])])
-                        _logger.info(['ws_consulta_cuenta_servicio', {'odoo_company_exist': odoo_company_exist}])
+                        odoo_company_exist = odoo_companies.search(
+                            [('company_code', '=', vals['company_code'])])
+                        _logger.info(['ws_consulta_cuenta_servicio', {
+                                     'odoo_company_exist': odoo_company_exist}])
                         if odoo_company_exist:
                             # Actualizo los datos de la empresa
-                            if odoo_company_exist['name'] != vals['name']: odoo_company_exist['name'] = vals['name']
-                            if odoo_company_exist['company_code'] != vals['company_code']: odoo_company_exist['company_code'] = vals['company_code']
-                            if odoo_company_exist['bantotal_account'] != vals['bantotal_account']: odoo_company_exist['bantotal_account'] = vals['bantotal_account']
-                            _logger.info(['ws_consulta_cuenta_servicio', {'odoo_company_exist_if': odoo_company_exist}])
+                            if odoo_company_exist['name'] != vals['name']:
+                                odoo_company_exist['name'] = vals['name']
+                            if odoo_company_exist['company_code'] != vals['company_code']:
+                                odoo_company_exist['company_code'] = vals['company_code']
+                            if odoo_company_exist['bantotal_account'] != vals['bantotal_account']:
+                                odoo_company_exist['bantotal_account'] = vals['bantotal_account']
+                            _logger.info(['ws_consulta_cuenta_servicio', {
+                                         'odoo_company_exist_if': odoo_company_exist}])
                         else:
                             # Creo la compañia
                             odoo_company_exist = odoo_companies.create({
@@ -55,32 +68,42 @@ class BM_OfficialSalary_Main(http.Controller):
                                 'company_code': vals['company_code'],
                                 'bantotal_account': vals['bantotal_account']
                             })
-                            _logger.info(['ws_consulta_cuenta_servicio', {'odoo_company_exist_else': vals}])
+                            _logger.info(['ws_consulta_cuenta_servicio', {
+                                         'odoo_company_exist_else': vals}])
 
-                        _logger.info(['ws_consulta_cuenta_servicio', {'odoo_company_exist': odoo_company_exist}])
+                        _logger.info(['ws_consulta_cuenta_servicio', {
+                                     'odoo_company_exist': odoo_company_exist}])
                         # Agrego la empresa a la lista de compañias
                         arr_company.append(odoo_company_exist.id)
                     else:
                         # Actualizo los datos de la empresa
-                        _logger.info(['ws_consulta_cuenta_servicio_else', {'login_company': login_company}])
-                        if login_company['name'] != vals['name']: login_company['name'] = vals['name']
-                        if login_company['company_code'] != vals['company_code']: login_company['company_code'] = vals['company_code']
-                        if login_company['bantotal_account'] != vals['bantotal_account']: login_company['bantotal_account'] = vals['bantotal_account']
+                        _logger.info(['ws_consulta_cuenta_servicio_else', {
+                                     'login_company': login_company}])
+                        if login_company['name'] != vals['name']:
+                            login_company['name'] = vals['name']
+                        if login_company['company_code'] != vals['company_code']:
+                            login_company['company_code'] = vals['company_code']
+                        if login_company['bantotal_account'] != vals['bantotal_account']:
+                            login_company['bantotal_account'] = vals['bantotal_account']
                         # Agrego la empresa a la lista de compañias
                         arr_company.append(login_company.id)
-                        _logger.info(['ws_consulta_cuenta_servicio_else', {'arr_company': arr_company}])
+                        _logger.info(['ws_consulta_cuenta_servicio_else', {
+                                     'arr_company': arr_company}])
 
-                    _logger.info(['ws_consulta_cuenta_servicio', {'arr_company': arr_company}])
+                    _logger.info(['ws_consulta_cuenta_servicio',
+                                 {'arr_company': arr_company}])
 
                     # Busco las cuentas asociadas a la compañia
-                    odoo_company_accounts = request.env['bm.company.account'].sudo()
+                    odoo_company_accounts = request.env['bm.company.account'].sudo(
+                    )
                     company_account_ids = []
 
                     for account in vals['accounts']:
                         # Verifico que la cuenta tenga el permiso PAGO DE SALARIOS
                         allowed_account = False
 
-                        _logger.info(['ws_consulta_cuenta_servicio', {'account_servicio_lista': account['Servicio']['sBTCuenta.Lista.Servicio']}])
+                        _logger.info(['ws_consulta_cuenta_servicio', {
+                                     'account_servicio_lista': account['Servicio']['sBTCuenta.Lista.Servicio']}])
 
                         for service in account['Servicio']['sBTCuenta.Lista.Servicio']:
                             if service['Codigo'] == '101':
@@ -89,10 +112,13 @@ class BM_OfficialSalary_Main(http.Controller):
                         # Si tiene el permiso, verifico que exista
                         if allowed_account:
                             current_account = odoo_company_accounts.search(['&', '&',
-                                ('account', '=', account['Cuenta']),
-                                ('module', '=', account['Modulo']),
-                                ('currency_type', '=', account['Moneda'])])
-                            _moneda = account['Moneda'] if (account['Moneda'] in ['6900', '62', '1']) else None
+                                                                            ('account', '=',
+                                                                             account['Cuenta']),
+                                                                            ('module', '=',
+                                                                             account['Modulo']),
+                                                                            ('currency_type', '=', account['Moneda'])])
+                            _moneda = account['Moneda'] if (
+                                account['Moneda'] in ['6900', '62', '1']) else None
                             # Si no existe la creo, sino la actualizo
                             if not current_account:
                                 new_company_account = current_account.create({
@@ -102,7 +128,8 @@ class BM_OfficialSalary_Main(http.Controller):
                                     'branch_id': request.env['bm.branch'].search([
                                         ('code', '=', account['Sucursal'])]).id,
                                 })
-                                company_account_ids.append(new_company_account.id)
+                                company_account_ids.append(
+                                    new_company_account.id)
                             else:
                                 current_account.write({
                                     'account': account['Cuenta'],
@@ -113,7 +140,8 @@ class BM_OfficialSalary_Main(http.Controller):
                                 })
                                 company_account_ids.append(current_account.id)
 
-                        _logger.info(['ws_consulta_cuenta_servicio', {'company_account_ids': company_account_ids}])
+                        _logger.info(['ws_consulta_cuenta_servicio', {
+                                     'company_account_ids': company_account_ids}])
 
                     # Sobre escribo las cuentas a la compañia
                     login_company.search([('id', '=', login_company['id'])]).write({
@@ -121,15 +149,15 @@ class BM_OfficialSalary_Main(http.Controller):
                     })
                 else:
                     _logger.error(['ws_consulta_cuenta_servicio', {
-                            'error': 'No se obtuvo el contrato para la cuenta {}'.format(login_bantotal_account),
-                            'mensaje': service_response['message']
-                            }
-                        ])
-
+                        'error': 'No se obtuvo el contrato para la cuenta {}'.format(login_bantotal_account),
+                        'mensaje': service_response['message']
+                    }
+                    ])
 
         # Busco las compañias obtenidas por odoo_company_ids
         for odoo_company_id in odoo_company_ids:
-            odoo_company = odoo_companies.search([('id', '=', odoo_company_id)])
+            odoo_company = odoo_companies.search(
+                [('id', '=', odoo_company_id)])
             arr_company.append(odoo_company.id)
         return arr_company
 
@@ -138,6 +166,8 @@ class BM_OfficialSalary_Main(http.Controller):
     def bm_get_user_info(self, **kwargs):
         user_info = None
         status = False
+        # Hardcoded user
+        kwargs['login'] = 4332768
         if request.jsonrequest:
             for user in request.env['res.users'].sudo().search([('login', '=', kwargs['login'])]):
                 user_info = {
@@ -152,10 +182,10 @@ class BM_OfficialSalary_Main(http.Controller):
     @http.route('/bm_check_user_login', type="json", auth='public')
     def bm_check_user_login(self, **kwargs):
         result = {
-		'success': False,
-		'id': None,
-		'companies': None
-	}
+            'success': False,
+            'id': None,
+            'companies': None
+        }
         if request.jsonrequest:
             try:
                 # Si existe el usuario, lo creo
@@ -163,7 +193,8 @@ class BM_OfficialSalary_Main(http.Controller):
                     vals = {
                         'name': kwargs['loginUser']['fullName'],
                         'login': kwargs['loginUser']['login'],
-                        'password': kwargs['loginUser']['subjectId'], # Password del usuario
+                        # Password del usuario
+                        'password': kwargs['loginUser']['subjectId'],
                     }
                     new_user = request.env['res.users'].sudo().create(vals)
                     user_info = {
@@ -174,22 +205,28 @@ class BM_OfficialSalary_Main(http.Controller):
                 else:
                     user_info = kwargs['odooUser']
 
-                odoo_companies = [] # Compañias que obtengo desde odoo
+                odoo_companies = []  # Compañias que obtengo desde odoo
                 for odoo_company_id in user_info['company_ids']:
                     odoo_companies.append(odoo_company_id)
-                login_companies = kwargs['loginUser']['additionalInfo']['BantotalAccountsLimits'] # Compañias que tengo desde login
+                # Compañias que tengo desde login
+                login_companies = kwargs['loginUser']['additionalInfo']['BantotalAccountsLimits']
 
-                _logger.info(['bm_check_user_login', {'login_companies': login_companies}])
+                _logger.info(['bm_check_user_login', {
+                             'login_companies': login_companies}])
 
                 # Busco las empresas por compañias
-                user_companies = self.get_user_companies(odoo_companies, login_companies)
+                user_companies = self.get_user_companies(
+                    odoo_companies, login_companies)
                 result['companies'] = user_companies
-                user_info['company_ids'] = request.env['res.company'].sudo().search(['&', ('id', '!=', 1), ('id', 'in', user_companies)])
+                user_info['company_ids'] = request.env['res.company'].sudo().search(
+                    ['&', ('id', '!=', 1), ('id', 'in', user_companies)])
 
-                _logger.info(['bm_check_user_login', {'user_companies': user_companies}])
+                _logger.info(['bm_check_user_login', {
+                             'user_companies': user_companies}])
 
                 # Sobre escribo la información de las empresas al usuario
-                request.env['res.users'].sudo().search([('id', '=', user_info['id'])]).write({
+                request.env['res.users'].browse(user_info['id']).sudo().write({
+                    'password': kwargs['loginUser']['subjectId'],
                     'company_ids': user_info['company_ids'],
                     'company_id': user_info['company_ids'][0]
                 })
@@ -205,7 +242,7 @@ class BM_OfficialSalary_Main(http.Controller):
     def bm_write_session_data(self, **kwargs):
         if request.jsonrequest:
             for user in request.env['res.users'].sudo().search([('id', '=', kwargs['user_id'])]):
-                user.write({
+                user.sudo().write({
                     'password': kwargs['externalId'],
                     'bm_api_key': kwargs['ApiKey'],
                     'bm_access_token': kwargs['AccessToken'],
@@ -217,12 +254,12 @@ class BM_SessionLogout(Session):
 
     @http.route('/web/session/logout', type='http', auth="none", website=True, multilang=False, sitemap=False)
     def bm_logout(self):
-        import requests, json
         baseUrl = 'https://dev.sudameris.com.py/api-ext/michi-auth-sudameris'
         authRequestUrlUser = baseUrl + '/auth/session'
         for user in request.env['res.users'].sudo().search([('id', '=', request._context['uid'])]):
             if 'X-RshkMichi-AccessToken' in request.httprequest.cookies.keys():
-                u = authRequestUrlUser + "/" + request.httprequest.cookies['X-RshkMichi-AccessToken']
+                u = authRequestUrlUser + "/" + \
+                    request.httprequest.cookies['X-RshkMichi-AccessToken']
                 h = {'X-RshkMichi-ApiKey': user['bm_api_key']}
                 r = requests.delete(u, headers=h)
                 _logger.debug(['RESPONSE_LOGOUT', json.loads(r.content)])

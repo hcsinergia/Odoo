@@ -2,6 +2,7 @@
 from odoo import http
 from datetime import datetime
 import tempfile
+
 try:
     from BytesIO import BytesIO
 except ImportError:
@@ -94,11 +95,10 @@ class BM_OfficialSalary_Files(http.Controller):
         # Sueldo o Aguinaldo
         sac = req.params.get('sac')
 
-
         company_debit = http.request.env.user.company_id.bantotal_account or ''
-        company_currency = '6900' #Guaranies
+        company_currency = '6900'  # Guaranies
         if http.request.env.user.company_id.currency_id.name == 'USD':
-            company_currency = '1' #Guaranies
+            company_currency = '1'  # Guaranies
 
         file_content_header = "{};{};{};{};{};{};{};{};{};{};{};{};{};{};{};{};{}\n".format(
             'H',                            # Identificador de cabecera(C:1)
@@ -133,7 +133,8 @@ class BM_OfficialSalary_Files(http.Controller):
 
         # Creo el PDF
         report = req.env.ref('hcs_bm_sudameris.bm_official_salary_report')
-        pdf_report = report.sudo().render_qweb_pdf(_ids, {'sac': sac, 'referencia': _referencia})[0]
+        pdf_report = report.sudo().render_qweb_pdf(
+            _ids, {'sac': sac, 'referencia': _referencia})[0]
         pdf_title = '{}_{}.pdf'.format(_concepto, _referencia)
 
         tmp_pdf = tempfile.TemporaryFile()
@@ -149,9 +150,8 @@ class BM_OfficialSalary_Files(http.Controller):
             zf.writestr(txt_title, txt_file)
             zf.writestr(pdf_title, pdf)
         return req.make_response(bitIO.getvalue(),
-                                     headers=[('Content-Type', 'application/x-zip-compressed'),
-                                              ('Content-Disposition', content_disposition(zip_filename))])
-
+                                 headers=[('Content-Type', 'application/x-zip-compressed'),
+                                          ('Content-Disposition', content_disposition(zip_filename))])
 
     @http.route('/web/binary_file/create_departure_report', type='http', auth="user")
     def create_departure_report(self, req):
@@ -162,10 +162,12 @@ class BM_OfficialSalary_Files(http.Controller):
         _ids = [int(_id) for _id in req.params.get(
             'ids').split(',')]  # Convierto los str a int
         _title = 'desvinculados_{}'.format(_now)
-        _officials = http.request.env['bm.official'].search([('id', 'in', _ids)])
+        _officials = http.request.env['bm.official'].search(
+            [('id', 'in', _ids)])
 
         # Creo el PDF
-        report = req.env.ref('hcs_bm_sudameris.bm_official_departure_note_report')
+        report = req.env.ref(
+            'hcs_bm_sudameris.bm_official_departure_note_report')
         pdf_report = report.sudo().render_qweb_pdf(_ids, {})[0]
         pdf_title = 'nota_{}.pdf'.format(_title)
 
@@ -185,14 +187,15 @@ class BM_OfficialSalary_Files(http.Controller):
             zf.writestr(xlsx_title, xlsx)
             zf.writestr(pdf_title, pdf)
         return req.make_response(bitIO.getvalue(),
-                                     headers=[('Content-Type', 'application/x-zip-compressed'),
-                                              ('Content-Disposition', content_disposition(zip_filename))])
+                                 headers=[('Content-Type', 'application/x-zip-compressed'),
+                                          ('Content-Disposition', content_disposition(zip_filename))])
 
     @http.route(['/web/binary_file/create_account_report/<string:ids>'], type='http', auth="user", website=True)
     def create_account_report(self, req, ids):
         ids = [int(_id) for _id in ids.split(',')]  # Convierto los str a int
         # Filtro solo los IDS que posean fecha de registro
-        ids = http.request.env['bm.official'].search(['&', ('id', 'in', ids), ('account_registration', '!=', None)]).ids
+        ids = http.request.env['bm.official'].search(
+            ['&', ('id', 'in', ids), ('account_registration', '!=', None)]).ids
         # Si no encunetra ninguno, exit
         if not ids:
             return None
@@ -257,7 +260,8 @@ class BM_OfficialSalary_Files(http.Controller):
                     sheet.write(_line, idx, official.branch_id.code,
                                 line_format)
                 elif 'Sucursal' == val:
-                    sheet.write(_line, idx, official.branch_id.name or 'S/D', line_format)
+                    sheet.write(
+                        _line, idx, official.branch_id.name or 'S/D', line_format)
                 elif 'Cuenta' == val:
                     sheet.write(_line, idx, official.account_number or '',
                                 line_format)
@@ -290,6 +294,5 @@ class BM_OfficialSalary_Files(http.Controller):
         output.seek(0)
         xlsx = output.read()
         output.close()
-
 
         return xlsx

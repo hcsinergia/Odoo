@@ -3,7 +3,8 @@ from odoo import api, fields, models
 from datetime import datetime
 
 DEPARTURE_REASONS_LICENCE = [('medical', 'Medica'), ('extra', 'Extra')]
-DEPARTURE_REASONS_UNLINK = [('fired', 'Despido'), ('resigned', 'Renuncia'), ('retired', 'Retirado')]
+DEPARTURE_REASONS_UNLINK = [
+    ('fired', 'Despido'), ('resigned', 'Renuncia'), ('retired', 'Retirado')]
 
 
 class BMOfficialDepartureWizard(models.TransientModel):
@@ -11,9 +12,11 @@ class BMOfficialDepartureWizard(models.TransientModel):
     _description = "BM Official Departure Wizard"
 
     def button_save(self):
-        official = self.env['bm.official'].browse(self.env.context.get('active_id'))
+        official = self.env['bm.official'].browse(
+            self.env.context.get('active_id'))
         departure_obj = self.env['bm.official.departure']
-        departure_last_reg = departure_obj.search(['&', ('official_identification_id', '=', official.identification_id), ('state', '=', 'active')], order='id desc', limit=1)
+        departure_last_reg = departure_obj.search(
+            ['&', ('official_identification_id', '=', official.identification_id), ('state', '=', 'active')], order='id desc', limit=1)
         if self.departure_reason_licence != False:
             _departure_reason = self.departure_reason_licence
         if self.departure_reason_unlink != False:
@@ -25,15 +28,19 @@ class BMOfficialDepartureWizard(models.TransientModel):
             'departure_start': self.departure_start,
             'departure_end': self.departure_end,
         })
-        
-    departure_reason_licence = fields.Selection(DEPARTURE_REASONS_LICENCE, string="Motivo de salida", copy=False, tracking=True)
-    departure_reason_unlink = fields.Selection(DEPARTURE_REASONS_UNLINK, string="Motivo de salida", copy=False, tracking=True)
-    departure_description = fields.Text(string="Salida: Información adicional", copy=False, tracking=True)
-    departure_start = fields.Date(string="Fecha de Salida", default=lambda self: datetime.now().date(), copy=False, required=True)
+
+    departure_reason_licence = fields.Selection(
+        DEPARTURE_REASONS_LICENCE, string="Motivo de salida", copy=False, tracking=True)
+    departure_reason_unlink = fields.Selection(
+        DEPARTURE_REASONS_UNLINK, string="Motivo de salida", copy=False, tracking=True)
+    departure_description = fields.Text(
+        string="Salida: Información adicional", copy=False, tracking=True)
+    departure_start = fields.Date(
+        string="Fecha de Salida", default=lambda self: datetime.now().date(), copy=False, required=True)
     departure_end = fields.Date(string="Fecha de Retorno", copy=False)
 
-    #@api.onchange('departure_reason_licence')
-    #def on_change_departure_reason(self):
+    # @api.onchange('departure_reason_licence')
+    # def on_change_departure_reason(self):
     #    if self.departure_reason == 'medical':
     #        self.departure_end = self._origin.departure_end
     #    else:

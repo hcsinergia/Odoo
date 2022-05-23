@@ -34,7 +34,7 @@
                                 <field name="departure_reason" attrs="{'readonly': [('official', '!=', None)]}" />
                                 <field name="departure_description" />
                                 <field name="departure_start" attrs="{'readonly': [('official', '!=', None)]}" />
-                                <field name="departure_end"  attrs="{'readonly': [('departure_reason', 'in', ['fired', 'resigned', 'retired'])], 'required': [('departure_reason', '=', 'medical')]}" />
+                                <field name="departure_end" attrs="{'readonly': [('departure_reason', 'in', ['fired', 'resigned', 'retired'])], 'required': [('departure_reason', '=', 'medical')]}" />
                             </group>
                         </group>
                     </sheet>

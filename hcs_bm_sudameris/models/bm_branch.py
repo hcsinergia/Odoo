@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import api, fields, models, _
 
+
 class BM_Branchs(models.Model):
     _name = "bm.branch"
     _description = "Sucursales"
@@ -10,5 +11,6 @@ class BM_Branchs(models.Model):
     # Agregar campo Entrega ó Normal: Canelia y los que empiezan con CAC
 
     _sql_constraints = [
-        ('branch_code_uniq', 'unique(code)', 'No puden existir 2 sucursales con el mismo código'),
+        ('branch_code_uniq', 'unique(code)',
+         'No puden existir 2 sucursales con el mismo código'),
     ]

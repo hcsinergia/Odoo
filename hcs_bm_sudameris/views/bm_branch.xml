@@ -9,8 +9,8 @@
                 <form string="branch">
                     <sheet>
                         <group col="4">
-                            <field name="name"/>
-                            <field name="code"/>
+                            <field name="name" />
+                            <field name="code" />
                         </group>
                     </sheet>
                 </form>
@@ -22,7 +22,7 @@
             <field name="model">bm.branch</field>
             <field name="arch" type="xml">
                 <tree string="Sucursales" export_xlsx="false" duplicate="false">
-                    <field name="name"/>
+                    <field name="name" />
                     <field name="code" />
                 </tree>
             </field>
@@ -35,8 +35,8 @@
                 <search string="Branchs">
                     <field name="name" />
                     <field name="code" />
-                    <separator/>
-                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                    <separator />
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]" />
                 </search>
             </field>
         </record>
@@ -45,7 +45,7 @@
             <field name="name">Sucursales</field>
             <field name="res_model">bm.branch</field>
             <field name="view_mode">tree,form</field>
-            <field name="search_view_id" ref="view_bm_branch_search"/>
+            <field name="search_view_id" ref="view_bm_branch_search" />
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     Crear Sucursal

@@ -11,6 +11,7 @@ class ApiWsEstadoCA:
     Metodo: POST
     URL: http://10.100.14.2:9280/bantotal/servlet/com.dlya.bantotal.odwsbt_BSPAYROOL?WSEstadoCA
     """
+
     def __init__(self, base_url, authenticate):
         self.service = "WSEstadoCA"
         self.request_url = base_url + self.service
@@ -107,9 +108,10 @@ class ApiWsEstadoCA:
 
         except Exception as e:
             exp_message = str(e)
-            if 'HTTPConnectionPool' in exp_message: # HTTPConnectionPool == Conection Timeout
+            if 'HTTPConnectionPool' in exp_message:  # HTTPConnectionPool == Conection Timeout
                 exp_message = '(HTTPConnectionPool): No se puede conectar al banco'
-            logger.error([self.service, 'Exception', exp_message], exc_info=True)
+            logger.error([self.service, 'Exception',
+                         exp_message], exc_info=True)
             response["Erroresnegocio"] = exp_message
 
         return response

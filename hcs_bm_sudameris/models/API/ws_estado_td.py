@@ -11,6 +11,7 @@ class ApiWsEstadoTD:
     Metodo: POST
     URL: https://10.100.14.2:9280/bantotal/servlet/com.dlya.bantotal.odwsbt_BSPayroll?WSEstadoTD
     """
+
     def __init__(self, base_url, authenticate):
         self.service = "WSEstadoTD"
         self.request_url = base_url + self.service
@@ -43,17 +44,33 @@ class ApiWsEstadoTD:
                         },
                         {
                             "Tipo": "Entero",
+                            "Nombre": "MODULO",
+                            "Codigo": 6,
+                            "Valor": official.account_module
+                        },
+                        {
+                            "Tipo": "Entero",
                             "Nombre": "MONEDA",
                             "Codigo": 7,
                             "Valor": official.currency_type
+                        },
+                        {
+                            "Tipo": "Entero",
+                            "Nombre": "SUCURSAL",
+                            "Codigo": 8,
+                            "Valor": official.branch_id.code
                         }
                     ]
                 }
             }
         })
         response = {
-            "Scstat": "",
-            "Observacion": "",
+            "CUENTA": "",
+            "MODULO": "",
+            "MONEDA": "",
+            "SUCURSAL": "",
+            "ESTADO": "",
+            "PIN": "",
             "Erroresnegocio": ""
         }
         try:
@@ -69,19 +86,36 @@ class ApiWsEstadoTD:
             if not response['Erroresnegocio']:
                 for resp in response['Result']['Consultas']['RepCons.Consulta']:
                     for columna in resp['Columnas']['RepCols.Columna']:
-                        if columna['Descripcion'] == 'Scstat':
-                            response["Scstat"] = columna['Filas']['RepFilas.Fila'][0]['Valor'] if len(
+                        if columna['Descripcion'] == 'CUENTA':
+                            response["CUENTA"] = columna['Filas']['RepFilas.Fila'][0]['Valor'] if len(
                                 columna['Filas']['RepFilas.Fila']) else ""
 
-                        if columna['Descripcion'] == 'Observacion':
-                            response["Observacion"] = columna['Filas']['RepFilas.Fila'][0]['Valor'] if len(
+                        if columna['Descripcion'] == 'MODULO':
+                            response["MODULO"] = columna['Filas']['RepFilas.Fila'][0]['Valor'] if len(
+                                columna['Filas']['RepFilas.Fila']) else ""
+
+                        if columna['Descripcion'] == 'MONEDA':
+                            response["MONEDA"] = columna['Filas']['RepFilas.Fila'][0]['Valor'] if len(
+                                columna['Filas']['RepFilas.Fila']) else ""
+
+                        if columna['Descripcion'] == 'SUCURSAL':
+                            response["SUCURSAL"] = columna['Filas']['RepFilas.Fila'][0]['Valor'] if len(
+                                columna['Filas']['RepFilas.Fila']) else ""
+
+                        if columna['Descripcion'] == 'ESTADO':
+                            response["ESTADO"] = columna['Filas']['RepFilas.Fila'][0]['Valor'] if len(
+                                columna['Filas']['RepFilas.Fila']) else ""
+
+                        if columna['Descripcion'] == 'PIN':
+                            response["PIN"] = columna['Filas']['RepFilas.Fila'][0]['Valor'] if len(
                                 columna['Filas']['RepFilas.Fila']) else ""
 
         except Exception as e:
             exp_message = str(e)
-            if 'HTTPConnectionPool' in exp_message: # HTTPConnectionPool == Conection Timeout
+            if 'HTTPConnectionPool' in exp_message:  # HTTPConnectionPool == Conection Timeout
                 exp_message = '(HTTPConnectionPool): No se puede conectar al banco'
-            logger.error([self.service, 'Exception', exp_message], exc_info=True)
+            logger.error([self.service, 'Exception',
+                         exp_message], exc_info=True)
             response["Erroresnegocio"] = exp_message
 
         return response

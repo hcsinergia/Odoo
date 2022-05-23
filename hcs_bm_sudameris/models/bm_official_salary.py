@@ -51,7 +51,8 @@ class BM_OfficialSalary(models.Model):
     payment_mode = fields.Selection([
         ('20', 'Cta. Cte'),
         ('21', 'Caja de Ahorro')], string="Modalidad de pago", default="21")
-    payment_reason = fields.Char(string="Motivo de no cobro", compute="_compute_payment_reason", store=True)
+    payment_reason = fields.Char(
+        string="Motivo de no cobro", compute="_compute_payment_reason", store=True)
     operation_type = fields.Char(string="Tipo de Operación")
     operation_code = fields.Char(string="Operación")
     company_id = fields.Many2one(
@@ -105,7 +106,8 @@ class BM_OfficialSalary(models.Model):
                 official_salary.state = 'aproved'
                 result['count_ok'] += 1
 
-            service_result = official_salary.official.ws_control_cliente_payroll(official_salary.official)
+            service_result = official_salary.official.ws_control_cliente_payroll(
+                official_salary.official)
 
             if service_result['data']['FcUltCobro'] not in ['0000-00-00', '']:
                 official_salary.gx_exist = service_result['data']['GxExiste']
@@ -113,10 +115,12 @@ class BM_OfficialSalary(models.Model):
                 last_payment_date = datetime.strptime(
                     service_result['data']['FcUltCobro'], '%Y-%m-%d').date()
 
-                diference_days = (datetime.now().date() - last_payment_date).days
+                diference_days = (datetime.now().date() -
+                                  last_payment_date).days
 
                 if diference_days > 35 and not official_salary.payment_reason:
-                    result['errors']['salary_payment_reson'].append(official_salary.id)
+                    result['errors']['salary_payment_reson'].append(
+                        official_salary.id)
 
                 official_salary.last_payment_date = last_payment_date
 
@@ -139,7 +143,6 @@ class BM_OfficialSalary(models.Model):
             result['count_ok'])
 
         return self.show_message('Remitir al Banco', result['message'])
-
 
     def action_reset(self):
         for official_salary in self.env['bm.official.salary'].browse(self._context.get('active_ids')) or self:

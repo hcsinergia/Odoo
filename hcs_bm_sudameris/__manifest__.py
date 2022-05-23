@@ -14,7 +14,7 @@
     """,
     'author': "HC Sinergia",
     'website': "http://www.hcsinergia.com",
-    #'sequence': 99,
+    # 'sequence': 99,
     # any module necessary for this one to work correctly
     'depends': ['base', 'web', 'contacts', 'report_xlsx'],
     # always loaded

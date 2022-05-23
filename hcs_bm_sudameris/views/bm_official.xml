@@ -90,7 +90,7 @@
                     <field name="segmentation_aproved" string="Aprobación Segmento" />
                     <field name="account_number" string="Ya es cliente?" widget="boolean" />
                     <field name="reject_reason" string="Observación" />
-                    <field name="refer_cam_date"  />
+                    <field name="refer_cam_date" />
                     <field name="state" />
                 </tree>
             </field>
@@ -123,8 +123,8 @@
             <field name="model">bm.official</field>
             <field name="arch" type="xml">
                 <form string="Funcionarios" class="o_employee_form">
-                    <field name="active" invisible="1"/>
-                    <field name="unlinked" invisible="1"/>
+                    <field name="active" invisible="1" />
+                    <field name="unlinked" invisible="1" />
                     <header attrs="{'invisible': [('id', '=', False)]}">
                         <button name="action_aprove" string="Aprobar" confirm="¿Estás seguro que deseas aprobar este funcionario?" states="check_cam,pending" class="oe_highlight oe_read_only" type="object" groups="hcs_bm_sudameris.group_bm_bank_cam" />
                         <button name="%(hcs_bm_sudameris.bm_official_wizard_rejectcam_action)d" string="Rechazar" states="check_cam" class="oe_read_only" type="action" groups="hcs_bm_sudameris.group_bm_bank_cam" />
@@ -137,11 +137,11 @@
                         <field name="state" options="{'clickable':False}" widget="statusbar" statusbar_visible="draft,error,ready" />
                     </header>
                     <sheet>
-                        <widget name="web_ribbon" title="X" bg_color="bg-danger" attrs="{'invisible': ['&amp;', ('active', '=', True), ('departured', '=', False)]}"/>
+                        <widget name="web_ribbon" title="X" bg_color="bg-danger" attrs="{'invisible': ['&amp;', ('active', '=', True), ('departured', '=', False)]}" />
                         <!--<widget name="web_ribbon" title="CANCELADO" bg_color="bg-danger" attrs="{'invisible': ['&amp;', ('account_name', '!=', 'CANCELADO'), ('account_name', 'in', ['INACTIVO', 'NORMAL', 'PACON'])]}"/>-->
                         <!--<widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>-->
                         <!--<widget name="web_ribbon" title="Desvinculado" bg_color="bg-danger" attrs="{'invisible': [('unlinked', '=', False)]}"/> -->
-                        <field name="image_1920" widget='image' class="oe_avatar" options='{"zoom": true, "preview_image":"image_128"}'/>
+                        <field name="image_1920" widget='image' class="oe_avatar" options='{"zoom": true, "preview_image":"image_128"}' />
                         <div class="oe_title">
                             <h1 class="oe_read_only">
                                 <field name="name" class="text-uppercase" />
@@ -252,7 +252,7 @@
                     <div class="oe_chatter">
                         <!--<field name="message_follower_ids" widget="mail_followers"/>-->
                         <!--<field name="activity_ids" widget="mail_activity"/>-->
-                        <field name="message_ids" widget="mail_thread" options="{'thread_level': 1}"/>
+                        <field name="message_ids" widget="mail_thread" options="{'thread_level': 1}" />
                     </div>
                 </form>
             </field>
@@ -320,7 +320,7 @@
             <field name="model_id" ref="model_bm_official" />
             <field name="binding_model_id" ref="model_bm_official" />
             <field name="binding_view_types">list,form</field>
-            <field name='groups_id' eval="[(4, ref('hcs_bm_sudameris.group_bm_company'))]"/>
+            <field name='groups_id' eval="[(4, ref('hcs_bm_sudameris.group_bm_company'))]" />
             <field name="state">code</field>
             <field name="code">
                 action = record.action_refer_cp()
@@ -332,7 +332,7 @@
             <field name="model_id" ref="model_bm_official" />
             <field name="binding_model_id" ref="model_bm_official" />
             <field name="binding_view_types">list,form</field>
-            <field name='groups_id' eval="[(4, ref('hcs_bm_sudameris.group_bm_bank_payroll'))]"/>
+            <field name='groups_id' eval="[(4, ref('hcs_bm_sudameris.group_bm_bank_payroll'))]" />
             <field name="state">code</field>
             <field name="code">
                 action = record.action_refer_cam()
@@ -344,7 +344,7 @@
             <field name="model_id" ref="model_bm_official" />
             <field name="binding_model_id" ref="model_bm_official" />
             <field name="binding_view_types">list,form</field>
-            <field name='groups_id' eval="[(4, ref('hcs_bm_sudameris.group_bm_bank'))]"/>
+            <field name='groups_id' eval="[(4, ref('hcs_bm_sudameris.group_bm_bank'))]" />
             <field name="state">code</field>
             <field name="code">
                 action = record.action_verificar_cuenta()
@@ -356,7 +356,7 @@
             <field name="model_id" ref="model_bm_official" />
             <field name="binding_model_id" ref="model_bm_official" />
             <field name="binding_view_types">list</field>
-            <field name='groups_id' eval="[(4, ref('hcs_bm_sudameris.group_bm_company'))]"/>
+            <field name='groups_id' eval="[(4, ref('hcs_bm_sudameris.group_bm_company'))]" />
             <field name="state">code</field>
             <field name="code">
                 action = record.action_create_officials_salary()
@@ -368,7 +368,7 @@
             <field name="model_id" ref="model_bm_official" />
             <field name="binding_model_id" ref="model_bm_official" />
             <field name="binding_view_types">list,form</field>
-            <field name='groups_id' eval="[(4, ref('hcs_bm_sudameris.group_bm_bank_collections'))]"/>
+            <field name='groups_id' eval="[(4, ref('hcs_bm_sudameris.group_bm_bank_collections'))]" />
             <field name="state">code</field>
             <field name="code">
                 action = record.action_departure_report()
@@ -380,7 +380,7 @@
             <field name="model_id" ref="model_bm_official" />
             <field name="binding_model_id" ref="model_bm_official" />
             <field name="binding_view_types">list,form</field>
-            <field name='groups_id' eval="[(4, ref('hcs_bm_sudameris.group_bm_bank'))]"/>
+            <field name='groups_id' eval="[(4, ref('hcs_bm_sudameris.group_bm_bank'))]" />
             <field name="state">code</field>
             <field name="code">
                 action = record.action_reset()
@@ -392,7 +392,7 @@
             <field name="model_id" ref="model_bm_official" />
             <field name="binding_model_id" ref="model_bm_official" />
             <field name="binding_view_types">list</field>
-            <field name='groups_id' eval="[(4, ref('hcs_bm_sudameris.group_bm_bank_cam'))]"/>
+            <field name='groups_id' eval="[(4, ref('hcs_bm_sudameris.group_bm_bank_cam'))]" />
             <field name="state">code</field>
             <field name="code">
                 action = record.action_aprove()
@@ -404,7 +404,7 @@
             <field name="model_id" ref="model_bm_official" />
             <field name="binding_model_id" ref="model_bm_official" />
             <field name="binding_view_types">list,form</field>
-            <field name='groups_id' eval="[(4, ref('hcs_bm_sudameris.group_bm_bank_cam'))]"/>
+            <field name='groups_id' eval="[(4, ref('hcs_bm_sudameris.group_bm_bank_cam'))]" />
             <field name="state">code</field>
             <field name="code">
                 action = record.action_create_account()
@@ -416,7 +416,7 @@
             <field name="model_id" ref="model_bm_official" />
             <field name="binding_model_id" ref="model_bm_official" />
             <field name="binding_view_types">list</field>
-            <field name='groups_id' eval="[(4, ref('hcs_bm_sudameris.group_bm_bank_cam'))]"/>
+            <field name='groups_id' eval="[(4, ref('hcs_bm_sudameris.group_bm_bank_cam'))]" />
             <field name="state">code</field>
             <field name="code">
                 action = record.action_account_report()
@@ -430,7 +430,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">bm.official</field>
             <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="official_tree_view_payroll"/>
+            <field name="view_id" ref="official_tree_view_payroll" />
             <field name="context">{}</field>
             <field name="domain">[('state', 'in', ['check_payroll', 'error'])]</field>
             <field name="help" type="html">
@@ -446,7 +446,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">bm.official</field>
             <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="official_tree_view_payroll_admin"/>
+            <field name="view_id" ref="official_tree_view_payroll_admin" />
             <field name="context">{}</field>
             <field name="domain">['&amp;', '&amp;', ('state', 'in', ['check_payroll']), ('segmentation_check', '=', True), ('segmentation_aproved', '=', False)]</field>
             <field name="help" type="html">
@@ -462,7 +462,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">bm.official</field>
             <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="official_tree_view_payroll_deliveries"/>
+            <field name="view_id" ref="official_tree_view_payroll_deliveries" />
             <field name="context">{}</field>
             <!--<field name="domain">['&amp;', ('state', 'not in', ['departured']), ('account_status', 'in', ['74'])]</field>-->
             <field name="domain">[('state', 'in', ['check_cpe'])]</field>
@@ -479,7 +479,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">bm.official</field>
             <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="official_tree_view_cam"/>
+            <field name="view_id" ref="official_tree_view_cam" />
             <field name="context">{}</field>
             <field name="domain">[('state', 'in', ['check_cam', 'pending'])]</field>
             <field name="help" type="html">
@@ -495,7 +495,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">bm.official</field>
             <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="official_tree_view_collections"/>
+            <field name="view_id" ref="official_tree_view_collections" />
             <field name="context">{}</field>
             <field name="domain">['&amp;', ('state', 'in', ['departured']), ('departure_medical', '=', False)]</field>
             <field name="help" type="html">
@@ -511,7 +511,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">bm.official</field>
             <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="official_tree_view"/>
+            <field name="view_id" ref="official_tree_view" />
             <field name="context">{}</field>
             <field name="domain">[('state', 'not in', ['departured'])]</field>
             <field name="help" type="html">

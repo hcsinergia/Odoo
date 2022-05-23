@@ -297,7 +297,8 @@
         <p class="alert alert-danger text-center" id="api-alert" style="display: none" role="alert"></p>
         <div class="checkbox my-2">
           <label>
-            <input type="checkbox" id="checkbox" /> Login Local
+            <input type="checkbox" id="checkbox" />
+            Login Local
           </label>
         </div>
         <button type="submit" id="btn-login" class="btn btn-primary btn-block" disabled="true">Iniciar Sesión</button>

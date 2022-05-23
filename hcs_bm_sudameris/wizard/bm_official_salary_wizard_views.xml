@@ -34,9 +34,9 @@
                     <div style="margin-top: 5px; margin-bottom: 5px">
                         <h5>No se registraron cobros en los ultimos 35 días de los siguientes funcionarios, especifique el motívo para luego poder generar el archivo de pago</h5>
                     </div>
-                    <field name="payment_ids"/>
+                    <field name="payment_ids" />
                     <footer>
-                        <button string="Save" name="save_reason_button" type="object" class="btn-primary"/>
+                        <button string="Save" name="save_reason_button" type="object" class="btn-primary" />
                         <button string="Cancel" class="btn-secondary" special="cancel" />
                     </footer>
                 </form>
@@ -48,8 +48,8 @@
             <field name="arch" type="xml">
                 <!-- the user list is editable, but one cannot add or delete rows -->
                 <tree string="Funcionarios" editable="bottom" create="false" delete="false">
-                    <field name="official_id" readonly="True" options="{'no_open': True}"/>
-                    <field name="payment_reason" required="True"/>
+                    <field name="official_id" readonly="True" options="{'no_open': True}" />
+                    <field name="payment_reason" required="True" />
                 </tree>
             </field>
         </record>

@@ -6,11 +6,11 @@
             <field name="model">bm.job</field>
             <field name="arch" type="xml">
                 <tree string="Job" export_xlsx="false" duplicate="false" decoration-bf="message_needaction==False">
-                    <field name="name"/>
-                    <field name="department_id"/>
-                    <field name="no_of_officials"/>
-                    <field name="message_needaction" invisible="1"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="name" />
+                    <field name="department_id" />
+                    <field name="no_of_officials" />
+                    <field name="message_needaction" invisible="1" />
+                    <field name="company_id" groups="base.group_multi_company" />
                 </tree>
             </field>
         </record>
@@ -23,13 +23,13 @@
                     <sheet>
                         <field name="company_id" invisible="1" />
                         <div class="oe_title">
-                            <label for="name" class="oe_edit_only"/>
+                            <label for="name" class="oe_edit_only" />
                             <h1>
-                                <field name="name" placeholder="ej. Ventas"/>
+                                <field name="name" placeholder="ej. Ventas" />
                             </h1>
                         </div>
                         <div>
-                            <label for="department_id" class="oe_edit_only"/>
+                            <label for="department_id" class="oe_edit_only" />
                             <field name="department_id" options="{'no_open': True}" />
                         </div>
                         <div>
@@ -42,7 +42,7 @@
                         </div>
                     </sheet>
                     <div class="oe_chatter">
-                        <field name="message_follower_ids" options="{'open_attachments': True}"/>
+                        <field name="message_follower_ids" options="{'open_attachments': True}" />
                     </div>
                 </form>
             </field>
@@ -58,12 +58,12 @@
                             <div class="oe_kanban_global_click">
                                 <div>
                                     <strong>
-                                        <field name="name"/>
+                                        <field name="name" />
                                     </strong>
                                 </div>
                                 <div>
                                     <span>
-                                        <field name="department_id"/>
+                                        <field name="department_id" />
                                         &amp;nbsp;
                                     </span>
                                 </div>
@@ -79,13 +79,13 @@
             <field name="model">bm.job</field>
             <field name="arch" type="xml">
                 <search string="Jobs">
-                    <field name="name" string="Job Position"/>
-                    <field name="department_id" operator="child_of"/>
-                    <separator/>
-                    <filter name="message_needaction" string="Unread Messages" domain="[('message_needaction', '=', True)]"/>
+                    <field name="name" string="Job Position" />
+                    <field name="department_id" operator="child_of" />
+                    <separator />
+                    <filter name="message_needaction" string="Unread Messages" domain="[('message_needaction', '=', True)]" />
                     <group expand="0" string="Group By">
-                        <filter string="Department" name="department" domain="[]" context="{'group_by': 'department_id'}"/>
-                        <filter string="Company" name="company" domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+                        <filter string="Department" name="department" domain="[]" context="{'group_by': 'department_id'}" />
+                        <filter string="Company" name="company" domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company" />
                     </group>
                 </search>
             </field>
@@ -95,7 +95,7 @@
             <field name="name">Puestos de trabajo</field>
             <field name="res_model">bm.job</field>
             <field name="view_mode">tree,form</field>
-            <field name="search_view_id" ref="job_search_view"/>
+            <field name="search_view_id" ref="job_search_view" />
             <field name="context">{}</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">

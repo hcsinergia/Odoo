@@ -4,40 +4,40 @@
     <record id="hcs_bm_sudameris_view_country_tree" model="ir.ui.view">
       <field name="name">hcs_bm_sudameris.res.country.tree</field>
       <field name="model">res.country</field>
-      <field name="inherit_id" ref="base.view_country_tree"/>
+      <field name="inherit_id" ref="base.view_country_tree" />
       <field name="arch" type="xml">
         <xpath expr="//field[@name='code']" position="after">
           <field name="code_number" />
         </xpath>
-  
+
       </field>
     </record>
 
     <record id="hcs_bm_sudameris_view_country_state_tree" model="ir.ui.view">
       <field name="name">hcs_bm_sudameris.res.country.state.tree</field>
       <field name="model">res.country.state</field>
-      <field name="inherit_id" ref="base.view_country_state_tree"/>
+      <field name="inherit_id" ref="base.view_country_state_tree" />
       <field name="arch" type="xml">
         <xpath expr="//tree" position="replace">
           <tree string="Departamentos">
             <field name="name" string="Nombre del Departamento" />
-            <field name="code" string="Código del Departamento"/>
-            <field name="country_id" options="{'no_create': True}"/>
+            <field name="code" string="Código del Departamento" />
+            <field name="country_id" options="{'no_create': True}" />
           </tree>
         </xpath>
-  
+
       </field>
     </record>
 
     <record id="view_bm_country_form" model="ir.ui.view">
       <field name="name">res.country.form</field>
       <field name="model">res.country</field>
-      <field name="inherit_id" ref="base.view_country_form"/>
+      <field name="inherit_id" ref="base.view_country_form" />
       <field name="arch" type="xml">
         <xpath expr="//field[@name='code']" position="after">
           <field name="code_number" string="Código del Pais" />
         </xpath>
-  
+
       </field>
     </record>
 
@@ -64,7 +64,7 @@
         </p>
       </field>
     </record>
-    
+
     <record id="view_bm_country_neighborhood_tree" model="ir.ui.view">
       <field name="name">res.country.neighborhood.tree</field>
       <field name="model">res.country.neighborhood</field>

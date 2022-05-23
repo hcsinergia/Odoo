@@ -85,7 +85,6 @@ class BM_Official(models.Model):
                     if not official.account_module:
                         official.account_module = account.module
 
-
     @api.depends('departured')
     def _compute_departured(self):
         for official in self:
@@ -98,7 +97,8 @@ class BM_Official(models.Model):
     @api.depends('company_code_imp')
     def _inverse_company_code(self):
         for official in self:
-            official.company_id = self.env['res.company'].sudo().search([('company_code', '=', official.company_code_imp)])
+            official.company_id = self.env['res.company'].sudo().search(
+                [('company_code', '=', official.company_code_imp)])
 
     @api.depends('welcome_kit', 'gross_salary')
     def _compute_welcome_kit(self):
@@ -268,8 +268,10 @@ class BM_Official(models.Model):
     company_id = fields.Many2one(
         'res.company', 'Nombre de la empresa', required=True, default=lambda self: self.env.company)
 
-    company_code_imp = fields.Integer("Cod Empresa", inverse="_inverse_company_code", store=True)
-    company_code = fields.Char("Código de Empresa", related='company_id.company_code', readonly=True)
+    company_code_imp = fields.Integer(
+        "Cod Empresa", inverse="_inverse_company_code", store=True)
+    company_code = fields.Char(
+        "Código de Empresa", related='company_id.company_code', readonly=True)
     department_id = fields.Many2one('bm.department', 'Departamento de la empresa',
                                     domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     job_id = fields.Many2one(
@@ -324,31 +326,40 @@ class BM_Official(models.Model):
 
     # region OVERRIDES
     def write(self, vals):
+        datetime_now = datetime.now()
         # Primer horario: 8:30
-        time_first = datetime.now().replace(hour=8, minute=30, second=0, microsecond=0)
+        time_first = datetime_now.replace(
+            hour=8, minute=30, second=0, microsecond=0)
         # Segundo horario: 16:00
-        time_last = datetime.now().replace(hour=16, minute=0, second=0, microsecond=0)
+        time_last = datetime_now.replace(
+            hour=16, minute=0, second=0, microsecond=0)
+
         # Si se realizaron cambios fuera de los horarios estipulados, se notifican
-        if datetime.now() < time_first or datetime.now() > time_last:
+        if datetime_now < time_first or datetime_now > time_last:
             # Notifica a los usuarios de Centro Payroll que se realizaron modificaciones fuera de horario  | Posiblemente haya que ajustar esta notificacion
             edited_vals = []
             # Filtro los campos que no se actualizan solos
             for idx in vals:
-                if idx not in ['account_module', 'account_number', 'account_name', 'account_status',
-                            'account_registration', 'branch_id', 'coach_id',
-                            'company_id', 'departured', 'departure_medical', 'refer_cam_date',
-                            'group_type', 'image_1920', 'job_title', 'name', 'parent_id',
-                            'idenfitication_image_front', 'idenfitication_image_back',
-                            'idenfitication_image_pdf', 'idenfitication_image_pdf_name',
-                            'authorization_image_pdf', 'authorization_image_pdf_name',
-                            'reject_reason', 'segmentation', 'state', 'welcome_kit']:
-                   edited_vals.append('{}: {} → {}'.format(self._fields[idx].string, self[idx] or 'Vacio', vals[idx] or 'Vacio'))
+                if idx not in ['account_module', 'account_name',
+                               'account_number', 'account_registration', 'account_status',
+                               'authorization_image_pdf', 'authorization_image_pdf_name',
+                               'branch_id', 'coach_id', 'company_id', 'departured',
+                               'departure_medical', 'group_type', 'image_1920',
+                               'idenfitication_image_back', 'idenfitication_image_front',
+                               'idenfitication_image_pdf', 'idenfitication_image_pdf_name',
+                               'job_title', 'name', 'parent_id', 'reliable_base', 'refer_cam_date',
+                               'reject_reason',  'segmentation_check', 'segmentation',
+                               'segmentation_aproved', 'state', 'unlinked', 'welcome_kit']:
+                    edited_vals.append('{}: {} → {}'.format(
+                        self._fields[idx].string, self[idx] or 'Vacio', vals[idx] or 'Vacio'))
             # Si hay algun dato que se haya editado a mano, lo notifico
             if edited_vals:
-                edited_msg = 'El usuario {} realizó cambios fuera de horario.<br><br>Funcionario: {}<br>{}'.format(self.env.user.name, '{} ({})'.format(self.name, self.identification_id),'<br>'.join(edited_vals))
+                edited_msg = 'El usuario {} realizó cambios fuera de horario.<br><br>Funcionario: {}<br>{}'.format(
+                    self.env.user.name, '{} ({})'.format(self.name, self.identification_id), '<br>'.join(edited_vals))
                 logger.info(edited_msg)
-                self.notify_to_channel_users('bm_mail_channel_group_bm_bank_payroll', 'Cambios fuera de horario', edited_msg)
-            
+                self.notify_to_channel_users(
+                    'bm_mail_channel_group_bm_bank_payroll', 'Cambios fuera de horario', edited_msg)
+
         res = super(BM_Official, self).write(vals)
         return res
     # endregion
@@ -370,11 +381,11 @@ class BM_Official(models.Model):
             channel_id = self.env.ref('hcs_bm_sudameris.{}'.format(_channel))
             if channel_id:
                 channel_id.message_post(
-                    author_id=1, # Sudameris BOT
+                    author_id=1,  # Sudameris BOT
                     subject=_subject,
                     body=_message,
                     message_type='comment',
-                    subtype='mail.mt_comment',
+                    subtype='mail.mt_comment'
                 )
         except Exception as e:
             logger.critical(e)
@@ -396,16 +407,18 @@ class BM_Official(models.Model):
                 })
             # Obtengo los contactos de cada usuario dentro de Sudameris Bank y La empresa
             users_partner_ids = []
-            for user in self.env.user.sudo().search([('company_ids', 'in', [1, company.id])]): users_partner_ids.append(user.partner_id.id)
+            for user in self.env.user.sudo().search([('company_ids', 'in', [1, company.id])]):
+                users_partner_ids.append(user.partner_id.id)
             # Reescribo los usuarios subscriptos, para que esten todos los usuarios que tengan acceso a la empresa
-            channel_id.sudo().write({'channel_partner_ids': [(6, 0, users_partner_ids)]})
+            channel_id.sudo().write(
+                {'channel_partner_ids': [(6, 0, users_partner_ids)]})
             # Envio la notificacion
             channel_id.message_post(
-                author_id=1, # Sudameris BOT
+                author_id=1,  # Sudameris BOT
                 subject=_subject,
                 body=_message,
                 message_type='comment',
-                subtype='mail.mt_comment',
+                subtype='mail.mt_comment'
             )
         except Exception as e:
             logger.critical(e)
@@ -481,7 +494,7 @@ class BM_Official(models.Model):
     # endregion
 
     # region ACTIONS API
-    def action_verificar_cuenta(self, return_self = False):
+    def action_verificar_cuenta(self, return_self=False):
         """
         # Action: Verificar Cuenta
         # - Verifica Base Confiable | Desactivo porque no se requiere para verificar cuenta
@@ -494,11 +507,11 @@ class BM_Official(models.Model):
         """
         result = {
             'message': '',
-            #'vbc': {
+            # 'vbc': {
             #    'ok': [],
             #    'pass': [],
             #    'error': []
-            #},
+            # },
             'cpc': {
                 'ok': [],
                 'pass': [],
@@ -518,11 +531,11 @@ class BM_Official(models.Model):
         for official in self.env['bm.official'].browse(self._context.get('active_ids')) or self:
             # Valida Base Confiable
             #vbc_result = self.ws_valida_base_confiable(official)
-            #if vbc_result['ok']:
+            # if vbc_result['ok']:
             #    result['vbc']['ok'].append(official.name)
-            #elif vbc_result['pass']:
+            # elif vbc_result['pass']:
             #    result['vbc']['pass'].append(official.name)
-            #elif vbc_result['error']:
+            # elif vbc_result['error']:
             #    result['vbc']['error'].append('{}: {}'.format(official.name, vbc_result['message']))
 
             # Cliente Posee Cuenta
@@ -533,7 +546,8 @@ class BM_Official(models.Model):
                 result['cpc']['ok'].append(official.name)
                 result['cpc']['pass'].append(official.name)
             elif cpc_result['error']:
-                result['cpc']['error'].append('{}: {}'.format(official.name, cpc_result['message']))
+                result['cpc']['error'].append('{}: {}'.format(
+                    official.name, cpc_result['message']))
 
             # Si el funcionario posee cuenta, verifico el estado de la caja de ahorro y la tarjeta de debito
             if cpc_result['ok'] or cpc_result['pass']:
@@ -542,7 +556,8 @@ class BM_Official(models.Model):
                 if eca_result['ok']:
                     result['eca']['ok'].append(official.name)
                 elif eca_result['error']:
-                    result['eca']['error'].append('{}: {}'.format(official.name, eca_result['message']))
+                    result['eca']['error'].append('{}: {}'.format(
+                        official.name, eca_result['message']))
 
                 # Si posee caja de ahorro, verifico la tarjeta de debito
                 if eca_result['ok']:
@@ -551,17 +566,21 @@ class BM_Official(models.Model):
                     if etd_result['ok']:
                         result['etd']['ok'].append(official.name)
                     elif etd_result['error']:
-                        result['etd']['error'].append('{}: {}'.format(official.name, etd_result['message']))
+                        result['etd']['error'].append('{}: {}'.format(
+                            official.name, etd_result['message']))
 
-        result['message'] = 'Se actualizaron {} Cuentas\n'.format(len(result['cpc']['ok']))
-        result['message'] += 'Se actualizaron los estados de {} Cajas de Ahorro\n'.format(len(result['eca']['ok']))
-        result['message'] += 'Se actualizaron los estados de {} Tarjetas de Débito\n\n'.format(len(result['etd']['ok']))
+        result['message'] = 'Se actualizaron {} Cuentas\n'.format(
+            len(result['cpc']['ok']))
+        result['message'] += 'Se actualizaron los estados de {} Cajas de Ahorro\n'.format(
+            len(result['eca']['ok']))
+        result['message'] += 'Se actualizaron los estados de {} Tarjetas de Débito\n\n'.format(
+            len(result['etd']['ok']))
 
         #result['message'] = 'Se validaron {} funcionarios\n'.format(len(result['vbc']['ok']))
-        #if len(result['vbc']['pass']) > 0:
+        # if len(result['vbc']['pass']) > 0:
         #    result['message'] += 'Funcionarios no encontrados:\n{}\n\n'.format(
         #        '\n'.join(result['vbc']['pass']))
-        #if len(result['vbc']['error']) > 0:
+        # if len(result['vbc']['error']) > 0:
         #    result['message'] += 'Errores al validar:\n{}\n\n'.format(
         #        '\n'.join(result['vbc']['error']))
 
@@ -570,9 +589,8 @@ class BM_Official(models.Model):
             result['message'] += 'Cuenta:\n{}\n\n'.format(
                 '\n'.join(result['cpc']['pass']))
 
-
         if len(result['cpc']['error']) > 0 or len(result['eca']['error']) > 0 or len(result['etd']['error']) > 0:
-                result['message'] += 'Se encontraron los siguientes inconvenientes:\n'
+            result['message'] += 'Se encontraron los siguientes inconvenientes:\n'
 
         if len(result['cpc']['error']) > 0:
             result['message'] += 'Cliente Posee Cuenta:\n{}\n\n'.format(
@@ -612,7 +630,7 @@ class BM_Official(models.Model):
             'atd': {
                 'ok': [],
                 'error': []
-            }            
+            }
         }
 
         # Verifico el estado de cuenta de todos los funcionarios
@@ -629,10 +647,11 @@ class BM_Official(models.Model):
                 elif ac_result['pass']:
                     result['ac']['pass'].append(' - %s' % official.name)
                 elif ac_result['error']:
-                    result['ac']['error'].append('{}: {}'.format(' - %s' % official.name, ac_result['message']))
+                    result['ac']['error'].append('{}: {}'.format(
+                        ' - %s' % official.name, ac_result['message']))
 
                 # Si se creo la cuenta, tambien creo la caja de ahorro y la tarjeta de debito
-                if ac_result['ok']: 
+                if ac_result['ok']:
                     # Alta de Caja de Ahorro
                     aca_result = self.ws_alta_ca(official)
                     if aca_result['ok']:
@@ -640,23 +659,30 @@ class BM_Official(models.Model):
                     elif aca_result['pass']:
                         result['aca']['pass'].append(' - %s' % official.name)
                     elif aca_result['error']:
-                        result['aca']['error'].append('{}: {}'.format(' - %s' % official.name, ac_result['message']))
+                        result['aca']['error'].append('{}: {}'.format(
+                            ' - %s' % official.name, ac_result['message']))
 
                     # Alta de Tarjeta de Débito
                     atd_result = self.ws_alta_td(official)
                     if atd_result['ok']:
                         result['atd']['ok'].append(' - %s' % official.name)
                     elif atd_result['error']:
-                        result['atd']['error'].append('{}: {}'.format(' - %s' % official.name, atd_result['message']))
+                        result['atd']['error'].append('{}: {}'.format(
+                            ' - %s' % official.name, atd_result['message']))
 
         # Vuelvo a verificar las cuentas para actualizar los estados de cuentas
         verif_result = self.action_verificar_cuenta(True)
 
-        result['message'] = 'Se crearon {} Cuentas\n'.format(len(result['ac']['ok']))
-        result['message'] += 'Se crearon {} Cajas de Ahorro\n'.format(len(result['aca']['ok']))
-        result['message'] += 'Se crearon {} Tarjetas de Débito\n\n'.format(len(result['atd']['ok']))
-        result['message'] += 'Se actualizaron los estados de {} Cajas de Ahorro\n'.format(len(verif_result['eca']['ok']))
-        result['message'] += 'Se actualizaron los estados de {} Tarjetas de Débito\n\n'.format(len(verif_result['etd']['ok']))
+        result['message'] = 'Se crearon {} Cuentas\n'.format(
+            len(result['ac']['ok']))
+        result['message'] += 'Se crearon {} Cajas de Ahorro\n'.format(
+            len(result['aca']['ok']))
+        result['message'] += 'Se crearon {} Tarjetas de Débito\n\n'.format(
+            len(result['atd']['ok']))
+        result['message'] += 'Se actualizaron los estados de {} Cajas de Ahorro\n'.format(
+            len(verif_result['eca']['ok']))
+        result['message'] += 'Se actualizaron los estados de {} Tarjetas de Débito\n\n'.format(
+            len(verif_result['etd']['ok']))
 
         if len(result['ac']['pass']) > 0 or len(result['ac']['pass']) > 0:
             result['message'] += 'Ya poseian datos los siguientes funcionarios:\n'
@@ -669,8 +695,8 @@ class BM_Official(models.Model):
                 '\n'.join(result['aca']['pass']))
 
         if len(result['ac']['error']) > 0 or len(result['ac']['error']) > 0 or len(result['atd']['error']) > 0 \
-            or len(verif_result['eca']['error']) > 0 or len(verif_result['etd']['error']) > 0:
-                result['message'] += 'Se encontraron los siguientes inconvenientes:\n'
+                or len(verif_result['eca']['error']) > 0 or len(verif_result['etd']['error']) > 0:
+            result['message'] += 'Se encontraron los siguientes inconvenientes:\n'
         if len(result['ac']['error']) > 0:
             result['message'] += 'Alta de Cuenta:\n{}\n\n'.format(
                 '\n'.join(result['ac']['error']))
@@ -740,9 +766,10 @@ class BM_Official(models.Model):
             if official.state in ['error']:
                 official.state = 'check_cam'
 
-            # Si está en 'Centro Payroll o Centro Altas Masivas', se guarda la fecha y hora del momento que llegó. 
+            # Si está en 'Centro Payroll o Centro Altas Masivas', se guarda la fecha y hora del momento que llegó.
             if official.state in ['check_payroll', 'check_cam']:
-                if not official.refer_cam_date : official.refer_cam_date = datetime.now().strftime('%d/%m/%Y %H:%M:%S')
+                if not official.refer_cam_date:
+                    official.refer_cam_date = datetime.now().strftime('%d/%m/%Y %H:%M:%S')
                 result['count_ok'] += 1
 
         result['message'] = 'Se remitieron {} funcionarios\n'.format(
@@ -767,9 +794,9 @@ class BM_Official(models.Model):
         if result['count_ok'] > 0:
             # Notifica a los usuarios de Centro Payroll que tiene altas
             self.notify_to_channel_users('bm_mail_channel_group_bm_bank_payroll',
-                                   'Funcionarios a aprobar',
-                                   'Tiene {} nuevas solicitudes de {} para alta de cuentas.'.format(
-                                       result['count_ok'], self.env.company.name))
+                                         'Funcionarios a aprobar',
+                                         'Tiene {} nuevas solicitudes de {} para alta de cuentas.'.format(
+                                             result['count_ok'], self.env.company.name))
 
         return self.show_message('Remitir al Banco', result['message'])
 
@@ -877,10 +904,12 @@ class BM_Official(models.Model):
         for official in self.env['bm.official'].browse(self._context.get('active_ids')) or self:
             if official.state in ['check_payroll']:
                 # Es extranjero o cobra en moneda extranjera y no tiene autorización
-                _country_py_id = self.env['res.country'].search([('id', '=', self.env.ref('base.py').id)])
+                _country_py_id = self.env['res.country'].search(
+                    [('id', '=', self.env.ref('base.py').id)])
                 if official.country != _country_py_id or official.currency_type != '6900':
                     if not official.authorization_image_pdf:
-                        result['errors']['not_id_auth'].append('{}'.format(official.name))
+                        result['errors']['not_id_auth'].append(
+                            '{}'.format(official.name))
                         continue
 
                 if official.segmentation_check and not official.segmentation_aproved:
@@ -979,7 +1008,8 @@ class BM_Official(models.Model):
 
     def action_departure_report(self, sac='1'):
         # Obtengo solo los ID de los que están en proceso y si hay alguno, genero el archivo de pago
-        officials = self.search(['&', '&', ('id', 'in', self._context.get('active_ids')), ('state', 'in', ['departured']), ('departure_medical', '=', False)]) or self.search(['&', ('state', 'in', ['departured']), ('departure_medical', '=', False)])
+        officials = self.search(['&', '&', ('id', 'in', self._context.get('active_ids')), ('state', 'in', ['departured']), (
+            'departure_medical', '=', False)]) or self.search(['&', ('state', 'in', ['departured']), ('departure_medical', '=', False)])
         if officials:
             return {
                 'type': 'ir.actions.act_url',

@@ -27,7 +27,8 @@ class ApiWsAuthenticate:
 
         # Checkeo que el token todavia sirva
         if datetime.now() > datetime.strptime(last_check, '%Y-%m-%d %H:%M:%S'):
-            logger.info([self.service, "Checkeando: now = {} | last_check = {}".format(datetime.now(), datetime.strptime(last_check, '%Y-%m-%d %H:%M:%S'))], exc_info=True)
+            logger.info([self.service, "Checkeando: now = {} | last_check = {}".format(
+                datetime.now(), datetime.strptime(last_check, '%Y-%m-%d %H:%M:%S'))], exc_info=True)
             new_date_check = datetime.now() + timedelta(hours=1)
             # renuevo el ultimo chequeo
             self.config_parameter.set_param(
@@ -36,11 +37,13 @@ class ApiWsAuthenticate:
             token_check = self.check_session(token)
             if token_check['Erroresnegocio']:
                 logger.info([self.service, 'Renovando token'], exc_info=True)
-                token = '' # Vacio el token para que se renueve si o si.
+                token = ''  # Vacio el token para que se renueve si o si.
             else:
-                logger.info([self.service, 'NO se necesita renovar token'], exc_info=True)
+                logger.info(
+                    [self.service, 'NO se necesita renovar token'], exc_info=True)
         else:
-            logger.info([self.service, 'NO se necesita checkear token'], exc_info=True)
+            logger.info(
+                [self.service, 'NO se necesita checkear token'], exc_info=True)
 
         # El token es valido hasta las 23:59 del dia actual, si es mayor, se renueva
         if datetime.now() > datetime.strptime('%s 23:59:00' % expiration, '%Y-%m-%d %H:%M:%S') or token == '':
@@ -48,7 +51,8 @@ class ApiWsAuthenticate:
                 service_response = self.ws_authenticate()
                 # Primero verifico que la API haya respondido bien
                 if service_response['Erroresnegocio']:
-                    logger.error([self.service, 'Exception', service_response['Erroresnegocio']], exc_info=True)
+                    logger.error(
+                        [self.service, 'Exception', service_response['Erroresnegocio']], exc_info=True)
                     # Si devuelve Erroresnegocio, detengo la interaccion
                 else:
                     token = service_response['SessionToken']
@@ -56,9 +60,10 @@ class ApiWsAuthenticate:
                     self.config_parameter.set_param(
                         'bm.token.expiration', datetime.now().date().strftime('%Y-%m-%d'))
                     self.config_parameter.set_param('bm.token', token)
-                    logger.info([self.service, 'Token Renovado'], exc_info=True)
+                    logger.info([self.service, 'Token Renovado'],
+                                exc_info=True)
             except:
-                token = '' # Dejo el token vacio para probar la proxima vez
+                token = ''  # Dejo el token vacio para probar la proxima vez
         else:
             logger.info([self.service, 'Token valido'], exc_info=True)
         return token
@@ -124,9 +129,10 @@ class ApiWsAuthenticate:
 
         except Exception as e:
             exp_message = str(e)
-            if 'HTTPConnectionPool' in exp_message: # HTTPConnectionPool == Conection Timeout
+            if 'HTTPConnectionPool' in exp_message:  # HTTPConnectionPool == Conection Timeout
                 exp_message = '(HTTPConnectionPool): No se puede conectar al banco'
-            logger.error([self.service, 'Exception', exp_message], exc_info=True)
+            logger.error([self.service, 'Exception',
+                         exp_message], exc_info=True)
             response["Erroresnegocio"] = exp_message
 
         return response

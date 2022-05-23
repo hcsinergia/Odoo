@@ -1,26 +1,28 @@
 class BM_ApiBase:
     """# API Exclusiva para Sudameris Bank"""
+
     def __init__(self, config_parameter):
         self.config_parameter = config_parameter
         self.base_url = "http://10.100.14.2:9280/bantotal/servlet/com.dlya.bantotal.odwsbt_BSPAYROOL?"
         self.authenticate = {
-            "Btinreq" : {
+            "Btinreq": {
                 "Device": "10.103.103.31",
                 "Usuario": "GEIER",
-                "Requerimiento":"1",
-                "Canal":"BTINTERNO",
-                "Token":""
-                },
-                "UserId": "GEIER",
-                "UserPassword": "Albuquerque2021"
-            }
+                "Requerimiento": "1",
+                "Canal": "BTINTERNO",
+                "Token": ""
+            },
+            "UserId": "GEIER",
+            "UserPassword": "Albuquerque2021"
+        }
         # Obtengo las credenciales de autenticación
         self.ws_authenticate()
 
     def ws_authenticate(self, *args, **kwargs):
         """# API Authenticate"""
         from .ws_authenticate import ApiWsAuthenticate
-        _api = ApiWsAuthenticate(self.base_url, self.authenticate, self.config_parameter)
+        _api = ApiWsAuthenticate(
+            self.base_url, self.authenticate, self.config_parameter)
         token = _api.get_token()
         self.authenticate['Btinreq']['Token'] = token
 
@@ -77,4 +79,3 @@ class BM_ApiBase:
         from .ws_estado_td import ApiWsEstadoTD
         _api = ApiWsEstadoTD(self.base_url, self.authenticate)
         return _api.ws_estado_td(official)
-

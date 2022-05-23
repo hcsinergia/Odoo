@@ -92,11 +92,10 @@ class BM_OfficialSalary_Controller(http.Controller):
         # Sueldo o Aguinaldo
         sac = req.params.get('sac')
 
-
         company_debit = http.request.env.user.company_id.bantotal_account
-        company_currency = '6900' #Guaranies
+        company_currency = '6900'  # Guaranies
         if http.request.env.user.company_id.currency_id.name == 'USD':
-            company_currency = '1' #Guaranies
+            company_currency = '1'  # Guaranies
 
         file_content_header = '{};{};{};{};{};{};{};{};{};1;{};10;20;{};0;0;0\n'.format(
             'H',                            # Identificador de cabecera(C:1)
@@ -131,7 +130,8 @@ class BM_OfficialSalary_Controller(http.Controller):
 
         # Creo el PDF
         report = req.env.ref('hcs_bm_sudameris.bm_official_salary_report')
-        pdf_report = report.sudo().render_qweb_pdf(_ids, {'sac': sac, 'referencia': _referencia})[0]
+        pdf_report = report.sudo().render_qweb_pdf(
+            _ids, {'sac': sac, 'referencia': _referencia})[0]
         pdf_title = '{}_{}.pdf'.format(_concepto, _referencia)
 
         tmp_pdf = tempfile.TemporaryFile()
@@ -147,14 +147,15 @@ class BM_OfficialSalary_Controller(http.Controller):
             zf.writestr(txt_title, txt_file)
             zf.writestr(pdf_title, pdf)
         return req.make_response(bitIO.getvalue(),
-                                     headers=[('Content-Type', 'application/x-zip-compressed'),
-                                              ('Content-Disposition', content_disposition(zip_filename))])
+                                 headers=[('Content-Type', 'application/x-zip-compressed'),
+                                          ('Content-Disposition', content_disposition(zip_filename))])
 
     @http.route(['/web/binary_pdf/<string:ids>'], type='http', auth="user", website=True)
     def download_pdf(self, req, ids):
         ids = [int(_id) for _id in ids.split(',')]  # Convierto los str a int
         # Filtro solo los IDS que posean fecha de registro
-        ids = http.request.env['bm.official'].search(['&', ('id', 'in', ids), ('account_registration', '!=', None)]).ids
+        ids = http.request.env['bm.official'].search(
+            ['&', ('id', 'in', ids), ('account_registration', '!=', None)]).ids
         # Si no encunetra ninguno, exit
         if not ids:
             return None
